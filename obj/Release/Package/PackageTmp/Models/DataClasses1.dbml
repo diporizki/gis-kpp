@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DB_ENG_GTRACK_KPP" Class="DataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=10.14.101.101\shpol;Initial Catalog=DB_ENG_GTRACK_KPP;Persist Security Info=True;User ID=sqlservices" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="DB_ENG_GTRACK_KPPConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.TBL_T_LOG_DATA" Member="TBL_T_LOG_DATAs">
+    <Type Name="TBL_T_LOG_DATA">
+      <Column Name="PK_PositionLogID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="FK_UnitID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Plate_No" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="PositionDateTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="GPSDateTime" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Longitude" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="Latitude" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="Speed" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Direction" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Altitude" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NumberOfSatelite" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ReportID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Mileage" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AccState" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="InputValue" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="OutputValue" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="AnalogInput9" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="AnalogInput10" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="LastRFID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Location" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Insert_date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+</Database>

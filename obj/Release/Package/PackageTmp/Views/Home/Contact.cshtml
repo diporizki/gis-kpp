@@ -1,0 +1,1496 @@
+﻿@{
+    ViewBag.Title = "Tracking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<!--<html>
+<head>
+    <script src="https://unpkg.com/wrld.js@1.x.x"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.1/leaflet.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    <link rel="stylesheet" href="~/Scripts/leaflet/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/aazuspan/leaflet-feature-legend/src/feature-legend.js"></script>
+    <link href="https://cdn.jsdelivr.net/gh/aazuspan/leaflet-feature-legend/src/feature-legend.css" rel="stylesheet" />
+    <script src="~/Scripts/leaflet/leaflet.js"></script>
+    <link rel="stylesheet" href="~/Scripts/leaflet/leaflet.css" />
+    <script src="~/Scripts/leaflet/leaflet.js"></script>
+    <script src="~/Scripts/geoserver-leaflet.js"></script>
+    <script src="~/Scripts/moment.js"></script>
+    <link rel="stylesheet" href="~/Scripts/leaflet/leaflet.legend.css" />
+    <script src="~/Scripts/leaflet.legend.css"></script>
+    <script src="~/Scripts/leaflet.legend.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="">
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    <script src="https://unpkg.com/wrld.js@1.x.x"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.1/leaflet.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet-src.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" type="text/css">
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>-->
+    <!-- Include this library for mobile touch support  -->
+    <!--<script src="~/Scripts/SliderControl.js"></script>
+    <script src="~/Scripts/SliderControl2.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.6.1/dist/nouislider.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/nouislider@15.6.1/dist/nouislider.min.css" rel="stylesheet">
+
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+    <style>
+        html, body {
+            height: 90%;
+            margin: 0;
+        }
+
+        .leaflet-container {
+            height: 400px;
+            width: 600px;
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+
+
+    <style>
+        #map {
+            width: 90%;
+            height: 90%;
+            margin: 0;
+            margin-left: 5%;
+            padding: 0;
+        }
+
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255,255,255,0.8);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+
+            .info h4 {
+                margin: 0 0 5px;
+                color: #777;
+            }
+
+        .legend {
+            text-align: left;
+            line-height: 18px;
+            color: #555;
+        }
+
+            .legend i {
+                width: 18px;
+                height: 18px;
+                float: left;
+                margin-right: 8px;
+                opacity: 0.7;
+            }
+
+            .legend .colorcircle {
+                border-radius: 50%;
+                width: 15px;
+                height: 15px;
+                margin-top: 0px;
+            }
+
+        .label {
+            line-height: 1;
+            margin-top: 0px;
+            padding-top: 1px;
+            padding-bottom: 0px;
+            padding-left: 1px;
+            padding-right: 1px;
+            background-color: ghostwhite;
+            color: black;
+            border: transparent;
+            box-shadow: none;
+            font-size: 10px;
+        }
+
+        .leaflet-tooltip-top {
+            line-height: 1;
+            margin-top: 0px;
+        }
+
+            .leaflet-tooltip-top::before {
+                display: none
+            }
+
+        .leaflet-tooltip {
+            padding-top: 1px;
+            padding-bottom: 0px;
+            padding-left: 4px;
+            padding-right: 4px;
+        }
+
+        #sidebar {
+            position: absolute;
+            width: 15%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            background-color: rgb(37 118 37)
+        }
+
+        .sidebarElement {
+            padding: 6px;
+            display: table;
+            width: 50%;
+        }
+
+        .removeSidebarElement {
+            display: table-cell;
+            text-align: right;
+            cursor: pointer;
+        }
+    </style>
+
+    <style id="aby-style"></style>
+
+</head>
+
+<body>
+
+    <div id="sidebar" style="text-align: center;">
+
+        <h1 style="color:rgb(37 118 37);">KPP Mining</h1>
+        <input type="image" src="~/Scripts/Logo_KPP.png" alt="Submit"
+               style="float:none" margin=0 auto; width="150"
+               height="150" ; display:block; />
+        <h2 style="color:white;">Interactive</h2>
+        <h2 style="color:white;">Geo-Dashboard</h2>
+        <h3>&nbsp;</h3>
+
+        <h4 style="color:white;text-align: left;">Date/Time Range: </h4>
+
+        <div id="slider-date"></div>
+
+        <h4>&nbsp;</h4>
+
+        <h4 style="color:white;text-align: left;">Plate Number: PM5006 </h4>
+
+        <h4 style="color:white;text-align: left;">Speed:</h4>
+
+        <h4>&nbsp;</h4>
+
+        <div id="slider"></div>
+
+        <h4 style="color:white;text-align: left;">GPS Date Time:</h4>
+
+
+        <div id="slider-date5006"></div>
+
+    </div>
+
+    <div id="map">
+
+    </div>
+
+    <script>
+
+        var map = L.map('map', {
+            attributionControl: false
+        })
+            .setView([0.859534, 117.835327], 13);
+        mapLink = "<a href='http://openstreetmap.org'>OpenStreetMap</a>";
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+            {
+                attributionControl: false
+                // attribution: 'My attribution <a href="http://test.com" target="_blank">My Link</a>'
+            })
+            .addTo(map);
+
+        var geojson = {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [51.5050, -0.0900]
+                    },
+                    "type": "Feature",
+                    "properties": {
+                        "title": "Marker 1",
+                        "time": (new Date('2020-01-01T00:00:00.000Z')).valueOf()
+                    }
+                },
+                {
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [51.5100, -0.0850]
+                    },
+                    "type": "Feature",
+                    "properties": {
+                        "title": "Marker 2",
+                        "time": (new Date('2020-01-02T00:00:00.000Z')).valueOf()
+                    }
+                },
+                {
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [51.5150, -0.0800]
+                    },
+                    "type": "Feature",
+                    "properties": {
+                        "title": "Marker 3",
+                        "time": (new Date('2020-01-03T00:00:00.000Z')).valueOf()
+                    }
+                },
+                {
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": [51.5200, -0.0750]
+                    },
+                    "type": "Feature",
+                    "properties": {
+                        "title": "Marker 4",
+                        "time": (new Date('2020-01-04T00:00:00.000Z')).valueOf()
+                    }
+                }
+            ]
+        };
+
+        console.log(geojson)
+
+        var markers = [];
+
+        L.geoJSON(geojson, {
+            pointToLayer: function (feature, latlng) {
+                var marker = L.marker(latlng, {
+                    title: feature.properties.title,
+                    time: feature.properties.time
+                });
+                marker.bindPopup(feature.properties.title + '<br>' + new Date(feature.properties.time).toLocaleString());
+                markers.push(marker);
+                return marker;
+            }
+        }).addTo(map);
+
+        var sliderdate5006 = document.getElementById('slider');
+
+        noUiSlider.create(sliderdate5006, {
+            start: [0, (new Date('2020-01-04T00:00:00.000Z')).valueOf()],
+            connect: true,
+            range: {
+                'min': (new Date('2020-01-01T00:00:00.000Z')).valueOf(),
+                'max': (new Date('2020-01-04T00:00:00.000Z')).valueOf()
+            }
+        });
+
+        sliderdate5006.noUiSlider.on('slide', function (values) {
+            console.log(values)
+            for (var i = 0; i < markers.length; i++) {
+                var marker = markers[i];
+                if (marker.options.time >= values[0] && marker.options.time <= values[1]) {
+                    if (!map.hasLayer(marker)) {
+                        marker.addTo(map);
+                    }
+                } else {
+                    if (map.hasLayer(marker)) {
+                        map.removeLayer(marker);
+                    }
+                }
+            }
+        });
+
+
+        /////////////////////////////////////////////////////////////////////////
+        //// Initialize map and set view to some coordinates and zoom level
+        //var map = L.map('map').setView([51.505, -0.09], 13);
+
+        //// Add tiles to the map
+        //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        //    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        //}).addTo(map);
+
+        //// Initialize the noUiSlider
+        //var slider = document.getElementById('slider');
+        //noUiSlider.create(slider, {
+        //    start: [0, (new Date()).valueOf()],
+        //    range: {
+        //        'min': (new Date('2020-01-01T00:00:00.000Z')).valueOf(),
+        //        'max': (new Date()).valueOf()
+        //    },
+        //    step: 60 * 60 * 1000,
+        //    tooltips: [
+        //        {
+        //            to: function (value) {
+        //                return new Date(value).toLocaleString();
+        //            },
+        //            from: function (value) {
+        //                return value;
+        //            }
+        //        },
+        //        {
+        //            to: function (value) {
+        //                return new Date(value).toLocaleString();
+        //            },
+        //            from: function (value) {
+        //                return value;
+        //            }
+        //        }
+        //    ]
+        //});
+
+        //// Create an array to store the markers
+        //var markers = [];
+
+        //// Add markers to the map
+        //for (var i = 0; i < 10; i++) {
+        //    var date = new Date();
+        //    date.setDate(date.getDate() - i);
+        //    var marker = L.marker([51.505 + (i * 0.01), -0.09 + (i * 0.01)], {
+        //        title: 'Marker ' + (i + 1),
+        //        time: date.valueOf()
+        //    });
+        //    marker.bindPopup('Marker ' + (i + 1) + '<br>' + date.toLocaleString());
+        //    markers.push(marker);
+        //}
+
+        //// Filter markers based on slider values
+        //slider.noUiSlider.on('slide', function (values) {
+
+        //    console.log(values)
+
+        //    for (var i = 0; i < markers.length; i++) {
+        //        var marker = markers[i];
+        //        if (marker.options.time >= values[0] && marker.options.time <= values[1]) {
+        //            if (!map.hasLayer(marker)) {
+        //                marker.addTo(map);
+        //            }
+        //        } else {
+        //            if (map.hasLayer(marker)) {
+        //                map.removeLayer(marker);
+        //            }
+        //        }
+        //    }
+        //});
+        ///////////////////////////////////////////////////////////
+
+
+        //// Initialize map and set view to some coordinates and zoom level
+        //var map = L.map('map').setView([51.505, -0.09], 13);
+
+        //// Add tiles to the map
+        //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        //    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        //}).addTo(map);
+
+        //// Initialize the noUiSlider
+        //var slider = document.getElementById('slider');
+        //noUiSlider.create(slider, {
+        //    start: [0, (new Date()).valueOf()],
+        //    range: {
+        //        'min': (new Date('2020-01-01T00:00:00.000Z')).valueOf(),
+        //        'max': (new Date()).valueOf()
+        //    },
+        //    step: 60 * 60 * 1000,
+        //    tooltips: [
+        //        {
+        //            to: function (value) {
+        //                return new Date(value).toLocaleString();
+        //            },
+        //            from: function (value) {
+        //                return value;
+        //            }
+        //        },
+        //        {
+        //            to: function (value) {
+        //                return new Date(value).toLocaleString();
+        //            },
+        //            from: function (value) {
+        //                return value;
+        //            }
+        //        }
+        //    ]
+        //});
+
+        //// Create an array to store the markers
+        //var markers = [];
+
+        //// Add markers to the map
+        //for (var i = 0; i < 10; i++) {
+        //    var date = new Date();
+        //    date.setDate(date.getDate() - i);
+        //    var marker = L.marker([51.505 + (i * 0.01), -0.09 + (i * 0.01)], {
+        //        title: 'Marker ' + (i + 1),
+        //        time: date.valueOf()
+        //    });
+        //    marker.bindPopup('Marker ' + (i + 1) + '<br>' + date.toLocaleString());
+        //    markers.push(marker);
+        //}
+
+        //// Filter markers based on slider values
+        //slider.noUiSlider.on('slide', function (values) {
+        //    for (var i = 0; i < markers.length; i++) {
+        //        var marker = markers[i];
+        //        if (marker.options.time >= values[0] && marker.options.time <= values[1]) {
+        //            if (!map.hasLayer(marker)) {
+        //                marker.addTo(map);
+        //            }
+        //        } else {
+        //            if (map.hasLayer(marker)) {
+        //                map.removeLayer(marker);
+        //            }
+        //        }
+        //    }
+        //});
+
+
+
+            //var sliderdate5006 = document.getElementById('slider-date5006');
+
+            //function timestamp(str) {
+            //    return new Date(str).getTime(zdate22);
+            //}
+
+            //noUiSlider.create(sliderdate5006, {
+            //    // range dari timestamp slider
+            //    range: {
+            //        'min': 0,
+            //        'max': zdate22.length - 1
+            //    },
+
+            //    // urutan slider geser2annya
+            //    step: 1,
+
+            //    // posisi awal dari geseran slider
+            //    start: [timestamp(zdate22)],
+            //    tooptips: true,
+            //    connect: true,
+            //    pips: {
+            //        mode: 'positions',
+            //        values: [0, 25, 50, 75, 100],
+            //        density: 4,
+            //        // No decimals
+            //        format: {
+            //            to: function (value) {
+            //                return dates[zdate22].toLocaleDateString()
+            //            }
+            //        }
+            //    }
+            //}).on('slide', function (e) {
+            //    console.log(e)
+
+            //    // console.log(pathpointArray)
+
+            //    for (zzpathpointlayer of pathpointArray) {
+
+            //        zzpathpointlayer.eachLayer(function (layer) {
+
+            //            // console.log(zzpathpointlayer)
+            //            if (layer.feature.properties.location >= parseFloat(e[0]) && layer.feature.properties.location <= parseFloat(e[1])) {
+            //                layer.addTo(map);
+            //            } else {
+            //                map.removeLayer(layer);
+
+
+            //// Create a new Leaflet map
+            //// Create a new Leaflet map
+            //var map = L.map('map').setView([51.505, -0.09], 13);
+
+            //// Array of coordinates
+            //var coordinates = [
+            //    [51.505, -0.09],
+            //    [51.50, -0.10],
+            //    [51.51, -0.09],
+            //    [51.50, -0.08]
+            //];
+            //var slider = document.getElementById('slider');
+
+            //// Create the noUiSlider
+            //noUiSlider.create(slider, {
+            //    start: [0],
+            //    range: {
+            //        'min': 0,
+            //        'max': coordinates.length - 1
+            //    },
+            //    step: 1,
+            //    connect: true,
+            //    behaviour: 'tap-drag',
+            //    tooltips: true
+            //});
+
+            //// Add the polyline to the map
+            //var polyline = L.polyline(coordinates[0]).addTo(map);
+
+            //// Add an event listener to the slider to update the polyline when the value changes
+            //slider.noUiSlider.on('change', function (values) {
+            //    var value = values[0];
+            //    polyline.setLatLngs(coordinates[value]);
+            //});
+
+
+                //// Initializing noUiSlider to create slider
+                //noUiSlider.create(slider, {
+                //    start: [367329.0, 3053969840.0],
+                //    tooptips: true,
+                //    behaviour: "drag",
+                //    connect: true,
+                //    range: {
+                //        min: 400000000.0,
+                //        max: 2500000000.0
+                //    }
+                //});
+
+                //// set center coordinates
+                //var coords = [35.60056, -79.450832];
+
+                //// set default zoom level
+                //var zoomLevel = 7;
+
+                //// initialize map
+                //var map = L.map('map').setView(coords, zoomLevel);
+
+                //// set source for map tiles
+                //ATTR = '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                //    '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | ' +
+                //    '&copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
+
+                //CDB_URL = 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+
+                //// add tiles to map
+                //L.tileLayer(CDB_URL, { attribution: ATTR }).addTo(map);
+
+                //var info = L.control();
+                //info.onAdd = function (map) {
+                //    this._div = L.DomUtil.create('div', 'info');
+                //    this.update();
+                //    return this._div;
+                //};
+                //info.update = function (props) {
+                //    this._div.innerHTML = '<h4>Land area: </h4>' + (props ?
+                //        + props.ALAND10 / 1000000 + ' sq. km<br />' + '<b>Name: ' + props.NAME10 : 'Hover over a County');
+                //};
+                //info.addTo(map);
+                //// Function defining colors for different ranges of data
+                //function getColor(d) {
+                //    return d > 700000 ? '#800026' : d > 300000 ? '#BD0026' : d > 100000 ? '#E31A1C' : d > 70000 ? '#FC4E2A' :
+                //        '#FED976';
+                //}
+
+                //function style(feature) {
+                //    return {
+                //        color: 'white',
+                //        weight: 2,
+                //        opacity: 1,
+                //        fillOpacity: 0.7,
+                //        fillColor: getColor(feature.properties.POP2010)
+                //    };
+                //}
+
+                //// Ajax call to read in external geoJson data for choropleth
+                //// This is where I've tried to insert functions to filter the data based on the
+                //// slider, but this has failed thus far.
+                //$.ajax({
+                //    dataType: 'json',
+                //    url: 'https://dl.dropbox.com/s/7ih7qejt54izwbd/nc.geojson',
+                //    success: function (data) {
+
+                //            $(data.features).each(function (key, data) {
+                //                function highlightFeature(e) {
+                //                    var layer = e.target;
+
+                //                    layer.setStyle({
+                //                        weight: 5,
+                //                        color: '#666',
+                //                        dashArray: '',
+                //                        fillOpacity: 0.5
+                //                    });
+                //                    if (!L.Browser.ie && !L.Browser.opera) {
+                //                        layer.bringToFront();
+                //                    }
+                //                    info.update(layer.feature.properties);
+                //                }
+
+                //                function resetHighlight(e) {
+                //                    zips.resetStyle(e.target);
+                //                    info.update();
+                //                }
+
+                //                function zoomToFeature(e) {
+                //                    map.fitBounds(e.target.getBounds());
+                //                }
+
+                //                function onEachFeature(feature, layer) {
+                //                    layer.on({
+                //                        mouseover: highlightFeature,
+                //                        mouseout: resetHighlight,
+                //                        click: zoomToFeature
+                //                    });
+                //                }
+                //                var zips = L.geoJson(data, {
+                //                    onEachFeature: onEachFeature,
+                //                    style: style
+                //                }) /*.addTo(map)*/
+                //                    ;
+
+                //                var group = L.featureGroup([zips]).addLayer(zips).addTo(map);
+                //                // Slider inserted in Ajax function for reading in data.
+                //                var slider = document.getElementById("slider");
+                //                // JQuery function for filtering based on reading in parameters of slider object.
+                //                // This section of the code should perform the filtering of the shapes, but
+                //                // currently only removes all shapes.
+                //                $("#slider").click(function (event) {
+                //                    range = slider.noUiSlider.get();
+                //                    rangeMin = range.slice(0, 1);
+                //                    rangeMax = range.slice(1);
+
+                //                    console.log(range);
+                //                    console.log(rangeMin);
+                //                    console.log(rangeMax);
+
+                //                    group.clearLayers();
+                //                    digital_zips = L.geoJson(data, {
+                //                        onEachFeature: onEachFeature,
+                //                        style: style,
+                //                        filter: function (feature, layer) {
+                //                            return (feature.properties.ALAND10 <= rangeMax) & (feature.properties.ALAND10 >= rangeMin);
+                //                        }
+                //                    });
+                //                    group = L.featureGroup().addLayer(digital_zips);
+                //                    group.addTo(map);
+
+                //                });
+                //            });
+                //    }
+                //}).error(function () { });
+
+                //var legend = L.control({
+                //    position: 'bottomright'
+                //});
+                //legend.onAdd = function (map) {
+                //    var div = L.DomUtil.create('div', 'info legend'),
+                //        grades = [0, 0.2, 0.6, 0.8, 1],
+                //        labels = [],
+                //        from, to;
+                //    for (var i = 0; i < grades.length; i++) {
+                //        from = grades[i];
+                //        to = grades[i + 1];
+
+                //        labels.push(
+                //            '<i style="background:' + getColor(from + 1) + '"></i> ' + from + (to ? '&ndash;' + to : '+'));
+                //    }
+
+                //    div.innerHTML = labels.join('<br>');
+                //    return div;
+                //};
+                //legend.addTo(map);
+
+
+                        //var geoJsonUrl = "http://82.223.73.191:8080/geoserver/citclops_obs/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=citclops_obs:metadata&srsName=EPSG:4326&outputFormat=text/javascript&format_options=callback:loadGeoJson";
+
+                        //var owsrootUrl = 'http://82.223.73.191:8080/geoserver/citclops_obs/ows';
+
+                        ////var coolPlaces = new L.LayerGroup();
+                        //var coolPlaces = new L.marker();
+                        //var defaultParameters = {
+                        //    service: 'WFS',
+                        //    version: '1.1.0',
+                        //    request: 'GetFeature',
+                        //    typeName: 'citclops_obs:metadata',
+                        //    outputFormat: 'text/javascript',
+                        //    format_options: 'callback:getJson',
+                        //    SrsName: 'EPSG:4326'
+                        //};
+
+                        //var parameters = L.Util.extend(defaultParameters);
+                        //var URL = owsrootUrl + L.Util.getParamString(parameters);
+
+                        //var WFSLayer = null;
+                        //var ajax = $.ajax({
+                        //    url: URL,
+                        //    dataType: 'jsonp',
+                        //    jsonpCallback: 'getJson',
+                        //    success: function (response) {
+                        //        WFSLayer = L.geoJson(response, {
+
+
+                        //            style: function (feature) {
+                        //                return {
+                        //                    stroke: false,
+                        //                    fillColor: 'FFFFFF',
+                        //                    fillOpacity: 0
+                        //                };
+                        //            },
+                        //            onEachFeature: function (feature, layer) {
+                        //                popupOptions = { maxWidth: 200 };
+                        //                layer.bindPopup('Citclops app<br> FU colour: ' + feature.properties.observation_id + '<br><img src=\"/samples/' + feature.properties.dataset_name + '.jpg\" width=\"60\"/><br><a href=\"/samples/' + feature.properties.dataset_name + '.jpg\" />Enlarge image</a><br><a href=\"/samples/' + feature.properties.dataset_name + '.xml\" />Metadata</a>', popupOptions);
+                        //            }, pointToLayer: function (data, latlng) {
+                        //                var LeafIcon = L.Icon.extend({
+                        //                    options: {
+                        //                        iconUrl: 'http://82.223.73.191:8080/FU' + data.properties.observation_id + '.png'
+                        //                    }
+                        //                });
+
+                        //                var greenIcon = new LeafIcon({ iconSize: 22 });
+                        //                return L.marker(latlng, { icon: greenIcon });
+                        //            }
+
+                        //        }).addTo(coolPlaces);
+                        //        //        }).addTo(coolPlaces.addTo(map));
+
+
+                        //    }
+                        //});
+
+                        //var nexrad3 = new L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpeg', {
+                        //    attribution: 'Tiles by <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+                        //    subdomains: '1234'
+                        //});
+
+                        //map = new L.Map('map', {
+                        //    center: new L.LatLng(41.357957292348146, 2.1842918638139963),
+                        //    zoomControl: false,
+                        //    maxZoom: 11,
+                        //    zoom: 4,
+                        //    layers: [coolPlaces, nexrad3]
+                        //});
+
+
+                        //L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+                        //var testlayer = L.geoJson(WFSLayer);
+
+                        ////For a Range-Slider use the range property:
+                        //sliderControl = L.control.sliderControl({
+                        //    position: "topright",
+                        //    layer: testlayer,
+                        //    range: true
+                        //});
+
+                        ////Make sure to add the slider to the map ;-)
+                        //map.addControl(sliderControl);
+                        ////And initialize the slider
+                        //sliderControl.startSlider();
+
+                        //var map = L.map('map', {
+                        //    attributionControl: false
+                        //})
+                        //    .setView([-77.76242552657358, -10.749107039737899], 13);
+                        //mapLink = "<a href='http://openstreetmap.org'>OpenStreetMap</a>";
+                        //L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+                        //    {
+                        //        attributionControl: false
+                        //        // attribution: 'My attribution <a href="http://test.com" target="_blank">My Link</a>'
+                        //    })
+                        //    .addTo(map);
+
+                        //var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        //    maxZoom: 100
+                        //    //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        //});
+
+                        //var esri = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                        //    maxZoom: 100
+                        //    //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        //});
+
+                        //var google = L.tileLayer('http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z} ', {
+                        //    maxZoom: 100
+                        //    //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        //});
+
+                        //var baseMaps = {
+                        //    "OpenStreetMap": osm,
+                        //    "ESRI Imagery": esri,
+                        //    "Google Imagery": google
+                        //};
+
+                        //var mb_token = 'pk.eyJ1IjoibWFwaGV3IiwiYSI6ImNqNGE0bHljNzEwNHQzMnA3cmFkMnZpMXkifQ.nRZ79Ob2sd6nLu-cVHPiLA'
+                        //var home = [60.672923, -135.024628];
+                        //var mymap = L.map('mapid').setView(home, 17);
+
+                        //L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+                        //    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                        //    maxZoom: 18,
+                        //    id: 'mapbox.satellite',
+                        //    accessToken: mb_token
+                        //}).addTo(mymap);
+                        //var centre = L.marker(home).addTo(mymap);
+
+                        //var data_points = {
+                        //    "type": "FeatureCollection",
+                        //    "name": "test-points-short-named",
+                        //    "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+                        //    "features": [
+                        //        { "type": "Feature", "properties": { "name": "1" }, "geometry": { "type": "Point", "coordinates": [-135.02507178240552, 60.672508785052223] } },
+                        //        { "type": "Feature", "properties": { "name": "6" }, "geometry": { "type": "Point", "coordinates": [-135.02480935075292, 60.672888247036376] } },
+                        //        { "type": "Feature", "properties": { "name": "12" }, "geometry": { "type": "Point", "coordinates": [-135.02449372349508, 60.672615176262731] } },
+                        //        { "type": "Feature", "properties": { "name": "25" }, "geometry": { "type": "Point", "coordinates": [-135.0240752514004, 60.673313811878423] } }
+                        //    ]
+                        //};
+
+                        //var pointLayer = L.geoJSON(null, {
+                        //    pointToLayer: function (feature, latlng) {
+                        //        label = String(feature.properties.name) // .bindTooltip can't use straight 'feature.properties.attribute'
+                        //        return new L.CircleMarker(latlng, {
+                        //            radius: 1,
+                        //        }).bindTooltip(label, { permanent: true, opacity: 0.7 }).openTooltip();
+                        //    }
+                        //});
+                        //pointLayer.addData(data_points);
+                        //mymap.addLayer(pointLayer);
+
+//L.tooltip(data_points);
+
+                        //$.ajax({
+                        //    type: "GET",
+                        //    url: "/Home/getdataPM2006",
+                        //    datatype: "json",
+                        //    success: function (result) {
+
+                        //        for (var i = 0; i < result.data.length; i++) {
+
+                        //            var path = {
+                        //                "type": "Point",
+                        //                "features": [
+                        //                    {
+                        //                        "type": "Feature",
+                        //                        "geometry": {
+                        //                            "type": "Point",
+                        //                            "coordinates": [[117.835327, 0.859534]]
+                        //                        },
+                        //                        "properties": { "speed": result.data[i].Speed, }
+                        //                    },
+
+                        //                ]
+                        //            };
+
+                        //            if (i == 0 || i == result.data.length - 2) {
+
+                        //                var geoJson = {
+                        //                    "type": "FeatureCollection",
+                        //                    "features": [{
+                        //                        "geometry": {
+                        //                            "type": "Point",
+                        //                            "coordinates": [result.data[i].Longitude, result.data[i].Latitude]
+                        //                        },
+                        //                        "type": "Feature",
+                        //                        "properties": {
+                        //                            "icon": "chart_red.png"
+                        //                        }
+                        //                    }]
+                        //                }
+
+                        //                console.log(result.data[i])
+
+                        //                //var markerv = L.marker([result.data[i].Latitude, result.data[i].Longitude], {onEachFeature: addMyData})
+                        //                //    .addTo(map);
+
+                        //                var pathpoint = {
+                        //                    "type": "LineString",
+                        //                    "features": [
+                        //                        {
+                        //                            "type": "Feature",
+                        //                            "geometry": {
+                        //                                "type": "LineString",
+                        //                                "coordinates": [[result.data[i].Longitude, result.data[i].Latitude], [result.data[i].Longitude, result.data[i].Latitude]]
+                        //                            },
+                        //                            "properties": { "speed": result.data[i].Speed, }
+                        //                        },
+
+                        //                    ]
+                        //                };
+
+                        //            }
+
+                        //            // console.log(path)
+
+                        //            // replace Leaflet's default blue marker with a custom icon
+                        //            function createCustomIcon(feature, latlng) {
+                        //                let myIcon = new L.icon({
+                        //                    iconUrl: '/Scripts/truck.png',
+                        //                    shadowUrl: '/Scripts/truck.png',
+                        //                    iconSize: [250, 250], // width and height of the image in pixels
+                        //                    shadowSize: [35, 20], // width, height of optional shadow image
+                        //                    iconAnchor: [12, 12], // point of the icon which will correspond to marker's location
+                        //                    shadowAnchor: [12, 6],  // anchor point of the shadow. should be offset
+                        //                    popupAnchor: [0, 0] // point from which the popup should open relative to the iconAnchor
+                        //                })
+                        //                return L.marker(latlng, { icon: myIcon })
+                        //            }
+
+                        //            // create an options object that specifies which function will called on each feature
+                        //            let myLayerOptions = {
+                        //                pointToLayer: createCustomIcon,
+                        //                iconUrl: '/Scripts/truck.png',
+                        //                shadowUrl: '/Scripts/truck.png'
+                        //            }
+
+                        //            function style(feature) {
+                        //                return {
+                        //                    weight: 5,
+                        //                    opacity: 1,
+                        //                    color: getColor(feature.properties.speed),
+                        //                };
+                        //            }
+
+                        //            // create the GeoJSON layer
+                        //            var asdas = L.geoJSON(geoJson, { style: myLayerOptions,  onEachFeature: addMyData })
+                        //                .addTo(map);
+
+                        //            //function createCustomIcon(feature, latlng) {
+                        //            //    let myIcon5 = new L.icon({
+                        //            //        iconUrl: '/Scripts/truck.png',
+                        //            //        iconSize: [15, 15],
+                        //            //        shadowSize: [10, 10],
+                        //            //        iconAnchor: [10, 10],
+                        //            //        shadowAnchor: [10, 10],
+                        //            //        popupAnchor: [-3, -16]
+                        //            //    })
+                        //            //    return L.marker(latlng, { icon: myIcon5 })
+                        //            //}
+
+                        //            //let myLayerOptions = {
+                        //            //    pointToLayer: createCustomIcon
+                        //            //}
+
+                        //            //let road = L.geoJSON(path, { style: style, onEachFeature: addMyData })
+                        //            //    .addTo(map);
+
+                        //            //let roadpoint = L.geoJSON(pathpoint, { style: style2, onEachFeature: addMyData })
+                        //            //    .addTo(map)
+
+                        //            //let roadpoint = L.geoJSON(pathpoint, {
+                        //            //    pointToLayer: (feature, latlng) => {
+                        //            //        return L.marker(latlng, {
+                        //            //            icon: myIcon5
+                        //            //        })
+                        //            //    }, onEachFeature: addMyData
+                        //            //})
+                        //            //    .addTo(map);
+
+                        //        }
+
+                        //    }
+                        //});
+
+                        //var mylayer = L.layerGroup().addTo(map)
+
+                        //function addMyData(feature, layer) {
+                        //    mylayer.addLayer(layer)
+                        //}
+
+                        //let basemapControl = {
+                        //    "Drone Imagery": osm,
+                        //    "Street View": osm
+                        //}
+                        //let layerControl = {
+                        //    "My Layer": mylayer,
+                        //}
+
+                        //L.control.layers(basemapControl, layerControl)
+                        //    .addTo(map)
+
+        /*
+* Create a custom icon to use with a GeoJSON layer instead of the default blue
+* marker. This snippet assumes the map object (map) and GeoJSON object
+* (myLayerData) have already been declared.
+*/
+
+                        //function initMap() {
+
+                        //    var map = new google.maps.Map(document.getElementById('map'), {
+                        //        zoom: 7,
+                        //        center: {
+                        //            lat: -12,
+                        //            lng: -77
+                        //        },
+                        //        mapTypeId: google.maps.MapTypeId.TERRAIN
+                        //    });
+
+                        //    var markerCollection = map.data.addGeoJson(geoJson);
+                        //    for (var i = 0, length = markerCollection.length; i < length; i++) {
+                        //        var feature = markerCollection[i];
+                        //        debugger;
+                        //        if (feature.getProperty('icon')) {
+                        //            map.data.setStyle(function (feature) {
+                        //                return {
+                        //                    icon: feature.getProperty('icon')
+                        //                };
+                        //            });
+                        //        }
+                        //    }
+                        //}
+                        //initMap()
+
+
+                        //var sliderControl = null;
+
+                        //var myMap = L.map('map').setView([52.06, 7.40], 10);
+
+                        //L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                        //    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                        //}).addTo(myMap);
+
+
+                        ////Use usual LayerGroups instead of GeoJSON fetched markers
+
+                        //var marker1 = L.marker([51.933292258, 7.582512743], { time: "2013-01-22 08:42:26+01" });
+                        //var marker2 = L.marker([51.9, 7.6], { time: "2013-01-22 10:00:26+01" });
+                        //var marker3 = L.marker([51.7, 7.7], { time: "2013-01-22 10:03:29+01" });
+
+                        //var pointA = new L.LatLng(51.8, -0.09);
+                        //var pointB = new L.LatLng(51.9, -0.2);
+                        //var pointList = [pointA, pointB];
+                        //var polyline = new L.Polyline(pointList, {
+                        //    time: "2013-01-22 10:24:59+01",
+                        //    color: 'red',
+                        //    weight: 3,
+                        //    opacity: 1,
+                        //    smoothFactor: 1
+                        //});
+
+
+                        //layerGroup = L.layerGroup([marker1, marker2, marker3, polyline]);
+                        //var sliderControl = L.control.sliderControl({ layer: layerGroup, follow: true });
+                        //myMap.addControl(sliderControl);
+                        //sliderControl.startSlider();
+
+
+                        ////Fetch some data from a GeoJSON file
+                        //$.getJSON("/Scripts/points.json", function (json) {
+                        //    var testlayer = L.geoJson(json),
+                        //        sliderControl = L.control.sliderControl({
+                        //            position: "topright",
+                        //            layer: testlayer
+                        //        });
+
+                        //    //For a Range-Slider use the range property:
+                        //    sliderControl = L.control.sliderControl({
+                        //        position: "topright",
+                        //        layer: testlayer,
+                        //        range: true
+                        //    });
+
+                        //    //Make sure to add the slider to the map ;-)
+                        //    myMap.addControl(sliderControl);
+                        //    //And initialize the slider
+                        //    sliderControl.startSlider();
+                        //});
+
+                                        //var baseMaps = {
+                                        //    "OpenStreetMap": osm,
+                                        //    "ESRI Imagery": esri,
+                                        //    "Google Imagery": google
+                                        //};
+
+                                        //var baseControl = L.control.layers(baseMaps)
+                                        //    .addTo(map);
+
+                                        //var myIcon2 = L.icon({
+                                        //    iconUrl: '/Scripts/Logo_KPP.png',
+                                        //    iconSize: [15, 15],
+                                        //    shadowSize: [10, 10],
+                                        //    iconAnchor: [10, 10],
+                                        //    shadowAnchor: [10, 10],
+                                        //    popupAnchor: [-3, -16]
+                                        //});
+
+                                                //var slider = {
+                                                //    "type": "FeatureCollection",
+                                                //    "features": [{
+                                                //        "type": "Feature",
+                                                //        "geometry": {
+                                                //            "type": "Point",
+                                                //            "coordinates": [0.860282, 117.83261]
+                                                //        },
+                                                //        "properties": {
+                                                //            "GPSId": "2",
+                                                //            "DateStart": "2015-06-23",
+                                                //            "DateClosed": "2016-01-23",
+                                                //            "GPSUserName": "fake2",
+                                                //            "GPSUserColor": "#FF5500",
+                                                //            "Gender": "Male",
+                                                //            "Active": 1
+                                                //        }
+                                                //    }, {
+                                                //        "type": "Feature",
+                                                //        "geometry": {
+                                                //            "type": "Point",
+                                                //            "coordinates": [0.859418, 117.845723]
+                                                //        },
+                                                //        "properties": {
+                                                //            "GPSId": "6",
+                                                //            "DateStart": "2015-06-23",
+                                                //            "DateClosed": "2016-01-23",
+                                                //            "GPSUserName": "fake1",
+                                                //            "GPSUserColor": "#00FF57",
+                                                //            "Gender": "Female",
+                                                //            "Active": 0
+                                                //        }
+                                                //    }, {
+                                                //        "type": "Feature",
+                                                //        "geometry": {
+                                                //            "type": "Point",
+                                                //            "coordinates": [0.869533, 117.82698]
+                                                //        },
+                                                //        "properties": {
+                                                //            "GPSId": "15",
+                                                //            "DateStart": "2015-02-21",
+                                                //            "DateClosed": "2016-02-28",
+                                                //            "GPSUserName": "fake10",
+                                                //            "GPSUserColor": "#00FF57",
+                                                //            "Gender": "Male",
+                                                //            "Active": 1
+                                                //        }
+                                                //    }, {
+                                                //        "type": "Feature",
+                                                //        "geometry": {
+                                                //            "type": "Point",
+                                                //            "coordinates": [0.818445, 117.870086]
+                                                //        },
+                                                //        "properties": {
+                                                //            "GPSId": "16",
+                                                //            "DateStart": "2015-01-01",
+                                                //            "DateClosed": "2016-01-01",
+                                                //            "GPSUserName": "fake11",
+                                                //            "GPSUserColor": "#00FF57",
+                                                //            "Gender": "Female",
+                                                //            "Active": 0
+                                                //        }
+                                                //    }, {
+                                                //        "type": "Feature",
+                                                //        "geometry": {
+                                                //            "type": "Point",
+                                                //            "coordinates": [0.907626, 117.801185]
+                                                //        },
+                                                //        "properties": {
+                                                //            "GPSId": "17",
+                                                //            "DateStart": "2015-02-04",
+                                                //            "DateClosed": "2016-09-21",
+                                                //            "GPSUserName": "fake12",
+                                                //            "GPSUserColor": "#00FF57",
+                                                //            "Gender": "Male",
+                                                //            "Active": 1
+                                                //        }
+                                                //    }]
+                                                //};
+
+                                                //var map = L.map('map', {
+                                                //    center: [31.780117, 35.2],
+                                                //    zoom: 17,
+                                                //    minZoom: 2,
+                                                //    maxZoom: 20
+                                                //});
+
+                                                //L.tileLayer('http://{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
+                                                //    attribution: '&copy; <a href="http://osm.org/copyright" title="OpenStreetMap" target="_blank">OpenStreetMap</a> contributors | Tiles Courtesy of <a href="http://www.mapquest.com/" title="MapQuest" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png" width="16" height="16">',
+                                                //    subdomains: ['otile1', 'otile2', 'otile3', 'otile4']
+                                                //}).addTo(map);
+
+                                                //var sliderControl = null;
+
+                                                ////Create a marker layer (in the example done via a GeoJSON FeatureCollection)
+                                                //var testlayer = L.geoJson(slider, {
+                                                //    onEachFeature: function (feature, layer) {
+                                                //        layer.bindPopup("<h1>" + feature.properties.GPSUserName + "</h1><p>Other info</p>");
+                                                //    }
+                                                //});
+
+                                                //var sliderControl = L.control.sliderControl({
+                                                //    position: "topright",
+                                                //    layer: testlayer,
+                                                //    range: true,
+                                                //    timeAttribute: "DateStart"
+                                                //});
+
+                                                ////Make sure to add the slider to the map ;-)
+                                                //map.addControl(sliderControl);
+
+                                                ////And initialize the slider
+                                                //sliderControl.startSlider();
+
+        /*
+* This example shows how to add a layer list to a map where users can check and uncheck boxes to show and hide layers.
+* The code below is combined with the code to add geojson to a map, since those two things are often used together.
+* The code consists of five main parts:
+*    1. Create the basemap(s) and layer(s)
+*    2. Get geojson data and run a function to add it to a layer from step 1
+*    3. Create the function that will be run in step 2
+*    4. Create the list of layers that will appear in the control component
+*    5. Create the control component
+*/
+
+                                                ///* 1 */
+                                                //// create a basemap
+                                                //let streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map)
+                                                //// create an operational layer that is empty for now
+                                                //let mylayer = L.layerGroup().addTo(map)
+
+                                                ///* 2 */
+                                                //// fill that layer with data from a geojson file
+                                                //jQuery.getJSON("/Home/getdataPM2006", function (json) {
+                                                //    L.geoJSON(json, {
+                                                //        onEachFeature: addMyData,
+                                                //    })
+                                                //})
+
+                                                ///* 3 */
+                                                //// This function is run for every feature found in the geojson file. It adds the feature to the empty layer we created above
+                                                //function addMyData(feature, layer) {
+                                                //    mylayer.addLayer(layer)
+                                                //    // some other code can go here, like adding a popup with layer.bindPopup("Hello")
+                                                //}
+
+                                                ///* 4 */
+                                                //// These options will appear in the control box that users click to show and hide layers
+                                                //let basemapControl = {
+                                                //    "My Basemap": streets, // an option to select a basemap (makes more sense if you have multiple basemaps)
+                                                //}
+                                                //let layerControl = {
+                                                //    "My Layer": mylayer, // an option to show or hide the layer you created from geojson
+                                                //}
+
+                                                ///* 5 */
+                                                //// Add the control component, a layer list with checkboxes for operational layers and radio buttons for basemaps
+                                                //L.control.layers(basemapControl, layerControl).addTo(map)
+
+                                                //$.getJSON(dataurl, function (data) {
+                                                //    $.each(data, function (i, item) {
+                                                        //var conv_poly = json.parse(item.geometry);
+                                                        //var poly = l.polygon(conv_poly, {
+                                                        //    color: "white",
+                                                        //    fillopacity: 0.8
+                                                        //});
+                                                        //poly.addto(map)
+                                                //    });
+                                                //});
+
+                                                //$.ajax({
+                                                //    type: "GET",
+                                                //    url: "/Home/getdataPM2006",
+                                                //    datatype: "json",
+                                                //    success: function (result) {
+
+                                                //        for (var i = 0; i < result.data.length; i++) {
+
+                                                //            var path = {
+                                                //                "type": "LineString",
+                                                //                "features": [
+                                                //                    {
+                                                //                        "type": "Feature",
+                                                //                        "geometry": {
+                                                //                            "type": "LineString",
+                                                //                            "coordinates": [[result.data[i].Longitude, result.data[i].Latitude], [result.data[i+1].Longitude, result.data[i+1].Latitude]]
+                                                //                        },
+                                                //                        "properties": { "speed": result.data[i].Speed, }
+                                                //                    },
+
+                                                //                ]
+                                                //            };
+
+                                                //            if (i == 0 || i == result.data.length - 2) {
+
+                                                //                console.log(result.data[i])
+
+                                                //                var markerv = L.marker([result.data[i].Latitude, result.data[i].Longitude])
+                                                //                    .addTo(map);
+                                                //            }
+
+                                                //           // console.log(path)
+
+                                                //            function getColor(speed) {
+                                                //                return speed > 30 ? '#d94b38' :
+                                                //                    speed > 20 ? '#d9a238' :
+                                                //                        speed > 10 ? '#c8d938' :
+                                                //                            '#309d27';
+                                                //            }
+
+                                                //            function style(feature) {
+                                                //                return {
+                                                //                    weight: 5,
+                                                //                    opacity: 1,
+                                                //                    color: getColor(feature.properties.speed),
+                                                //                };
+                                                //            }
+
+                                                //            var road = L.geoJSON(path, { style: style })
+                                                //                .addTo(map);
+
+                                                //        }
+                                                //    }
+                                                //});
+
+                                                //$.ajax({
+                                                //    type: "GET",
+                                                //    url: "/Home/getdataPM2006",
+                                                //    datatype: "json",
+                                                //    success: function (result) {
+
+                                                //            var coords = [result.data[i]];
+
+                                                //            for (var i = 0; i < result.data.length; ++i) {
+                                                //                coords.push(getRandomLatLng());
+                                                //            }
+
+                                                //            var polyline = L.polyline(coords).addTo(map);
+                                                //            var previousPoint;
+
+                                                //            // http://leafletjs.com/reference.html#polyline-getlatlngs
+                                                //            polyline.getLatLngs().forEach(function (latLng) {
+                                                //                if (previousPoint) {
+                                                //                    L.marker(latLng).bindPopup(
+                                                //                        'Distance from previous point: '
+                                                //                        + previousPoint.distanceTo(latLng).toFixed(2) // http://leafletjs.com/reference.html#latlng-distanceto
+                                                //                        + ' meter(s)'
+                                                //                    ).addTo(map);
+                                                //                }
+                                                //                previousPoint = latLng;
+                                                //            });
+
+                                                //            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                                //                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                                                //            }).addTo(map);
+
+                                                //            function getRandomLatLng() {
+                                                //                return [
+                                                //                    0.859534 + 0.1 * Math.random(),
+                                                //                    117.835327 + 0.2 * Math.random()
+                                                //                ];
+                                                //            }
+                                                //        }
+                                                //    }
+                                                //);
+
+                                                //var map = L.map('map').setView([25, 10], 4);
+
+                                                ////// Creating the polyline
+                                                //var pointA = new L.LatLng(-20, -20);
+                                                //var pointB = new L.LatLng(80, 77.70641);
+                                                //var pointList = [pointA, pointB];
+
+                                                //var firstpolyline = new L.Polyline(pointList, {
+                                                //    smoothFactor: 1,
+                                                //    className: 'my_polyline'
+                                                //});
+                                                //firstpolyline.addTo(map);
+
+
+                                                //// Creating the geojson object
+                                                //var geojson = { "type": "FeatureCollection", "features": [{ "type": "Feature", "properties": { "NAME": "Custom country" }, "geometry": { "type": "Polygon", "coordinates": [[[-0.18, 29.76], [8.79, 31.65], [13.54, 27.61], [8.53, 21.86]]] } }] }
+
+                                                //var myCustomStyle = {
+                                                //    stroke: false,
+                                                //    fill: true,
+                                                //    fillColor: 'green',
+                                                //    fillOpacity: 1
+                                                //}
+
+                                                //L.geoJson(geojson, {
+                                                //    clickable: true,
+                                                //    style: myCustomStyle
+                                                //}).setZIndex(1).addTo(map);
+
+                                                //var map = L.map('map', {
+                                                //    attributionControl: false
+                                                //})
+                                                //    .setView([45.51, -122.68], 13);
+                                                //mapLink = "<a href='http://openstreetmap.org'>OpenStreetMap</a>";
+                                                //L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+                                                //    {
+                                                //        attributionControl: false
+                                                //        // attribution: 'My attribution <a href="http://test.com" target="_blank">My Link</a>'
+                                                //    })
+                                                //    .addTo(map);
+
+                                                //var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                                //    maxZoom: 100
+                                                //    //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                                //});
+
+                                                //var esri = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                                                //    maxZoom: 100
+                                                //    //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                                //});
+
+                                                //var google = L.tileLayer('http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z} ', {
+                                                //    maxZoom: 100
+                                                //    //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                                //});
+
+                                                //var baseMaps = {
+                                                //    "OpenStreetMap": osm,
+                                                //    "ESRI Imagery": esri,
+                                                //    "Google Imagery": google
+                                                //};
+
+                                                //var baseControl = L.control.layers(baseMaps)
+                                                //    .addTo(map);
+
+                                                //var coords2 = [
+                                                //    [45.51, -122.68],
+                                                //    [37.77, -122.43],
+                                                //    [34.04, -118.2]
+                                                //];
+
+                                                //function segementedPolyStyle(feature) {
+                                                //    var style;
+
+                                                //    if (feature.properties.isTooLong)
+                                                //        style = {
+                                                //            color: 'transparent',
+                                                //        };
+                                                //    else {
+                                                //        style = {
+                                                //            color: 'red',
+                                                //            opacity: 1.0
+                                                //        };
+                                                //    }
+                                                //    return (style);
+                                                //}
+
+                                                //var mouseoverStyle = {
+                                                //    color: 'blue'
+                                                //};
+
+                                                //var maxLength = 5;
+
+                                                //function createSegmentedPolyline(coords) {
+                                                //    var polyLayer = L.geoJSON(coords2, {
+                                                //        style: segementedPolyStyle,
+                                                //        onEachFeature: function (feature, layer) {
+                                                //            layer.on("mouseover", function (e) {
+                                                //                e.target.setStyle(mouseoverStyle);
+                                                //            });
+                                                //            layer.on("mouseout", function (e) {
+                                                //                polyLayer.resetStyle(e.target);
+                                                //            });
+                                                //        }
+                                                //    });
+                                                //    for (var i = 0; i < (coords.length - 1); i++) {
+                                                //        var line = L.polyline([coords[i], coords[i + 1]]);
+                                                //        var length = L.latLng(coords[i]).distanceTo(L.latLng(coords[i + 1]));
+                                                //        var geoJSON = line.toGeoJSON();
+                                                //        geoJSON.properties.isTooLong = (length > maxLength);
+                                                //        polyLayer.addData(geoJSON);
+                                                //    }
+                                                //    return (polyLayer);
+                                                //}
+
+                                                //var segmentedPolyline = createSegmentedPolyline(coords);
+                                                //segmentedPolyline.addTo(map);
+
+                                                /// NOTES
+                                                // filter tanggal
+                                                // tulisan km di polyline
+                                                // basemap bawaan
+
+    </script>
+</body>
+</html>-->

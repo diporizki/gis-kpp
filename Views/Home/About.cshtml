@@ -1,0 +1,3099 @@
+﻿@{
+    ViewBag.Title = "Tracking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<!DOCTYPE HTML>
+<html>
+
+ @*LIBRARY DAN CSS*@
+<head>
+    <meta charset="utf-8" />
+    <title>Leaflet GIS in AHP.NET</title>
+
+    <!-- include leaflet css and javascript -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    <link rel="stylesheet" href="~/Scripts/leaflet/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/aazuspan/leaflet-feature-legend/src/feature-legend.js"></script>
+    <link href="https://cdn.jsdelivr.net/gh/aazuspan/leaflet-feature-legend/src/feature-legend.css" rel="stylesheet" />
+    <script src="~/Scripts/leaflet/leaflet.js"></script>
+    <link rel="stylesheet" href="~/Scripts/leaflet/leaflet.css" />
+    <script src="~/Scripts/leaflet/leaflet.js"></script>
+    @*<script src="~/Scripts/geoserver-leaflet.js"></script>*@
+    <script src="~/Scripts/moment.js"></script>
+    <link rel="stylesheet" href="~/Scripts/leaflet/leaflet.legend.css" />
+    <script src="~/Scripts/leaflet.legend.css"></script>
+    <script src="~/Scripts/leaflet.legend.js"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="">
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    <script src="https://unpkg.com/wrld.js@1.x.x"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.1/leaflet.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet-src.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" type="text/css">
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+    <!-- Include this library for mobile touch support  -->
+    <script src="~/Scripts/SliderControl.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min.js"></script>
+    <!-- Slider  -->
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.6.1/dist/nouislider.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/nouislider@15.6.1/dist/nouislider.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/wnumb@1.2.0/wNumb.min.js"></script>
+    <script src="~/Scripts/L.Geoserver.js"></script>
+    <script src="~/Scripts/leaflet.draw.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+    <style>
+        html, body {
+            height: 90%;
+            margin: 0;
+            zoom: 85%;
+        }
+
+        .leaflet-container {
+            height: 400px;
+            width: 600px;
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+
+
+    <style>
+        #map {
+            width: 90%;
+            height: 90%;
+            margin: 0;
+            margin-left: 5%;
+            padding: 0;
+        }
+
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255,255,255,0.8);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+
+            .info h4 {
+                margin: 0 0 5px;
+                color: #777;
+            }
+
+        .legend {
+            text-align: left;
+            line-height: 18px;
+            color: #555;
+        }
+
+            .legend i {
+                width: 18px;
+                height: 18px;
+                float: left;
+                margin-right: 8px;
+                opacity: 0.7;
+            }
+
+            .legend .colorcircle {
+                border-radius: 50%;
+                width: 15px;
+                height: 15px;
+                margin-top: 0px;
+            }
+
+        .label {
+            line-height: 1;
+            margin-top: 0px;
+            padding-top: 1px;
+            padding-bottom: 0px;
+            padding-left: 1px;
+            padding-right: 1px;
+            color: black;
+            border: transparent;
+            box-shadow: none;
+            font-size: 9px;
+        }
+
+        .leaflet-tooltip-top {
+            line-height: 1;
+            margin-top: 0px;
+        }
+
+            .leaflet-tooltip-top::before {
+                display: none
+            }
+
+        .leaflet-tooltip {
+            padding-top: 1px;
+            padding-bottom: 0px;
+            padding-left: 4px;
+            padding-right: 4px;
+        }
+
+        #sidebar {
+            position: absolute;
+            width: 15%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            background-color: rgb(37 118 37)
+        }
+
+        .sidebarElement {
+            padding: 6px;
+            display: table;
+            width: 50%;
+        }
+
+        .removeSidebarElement {
+            display: table-cell;
+            text-align: right;
+            cursor: pointer;
+        }
+    </style>
+
+    <style id="aby-style"></style>
+
+    <style>
+
+        .dropdown-toggle {
+            background-color: white;
+            border: 1px solid gray;
+            border-radius: 10px;
+            width: 250px;
+            height: 40px;
+            text-align: center;
+            font-size: 16px;
+            margin: 0 auto;
+            display: block;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dropdown-menu {
+            width: 200px;
+            text-align: center;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .dropdown-item {
+            cursor: pointer;
+        }
+
+        .card-body {
+            padding: 10px;
+        }
+
+        .dropdown-menu .slider-container {
+            display: none;
+        }
+    </style>
+
+    <style>
+
+        .noUi-tooltip {
+            font-size: 10px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <script src="https://unpkg.com/wrld.js@1.x.x"></script>
+    @*<link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.1/leaflet.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css">*@
+    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet-src.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" type="text/css">
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+    <!-- Include this library for mobile touch support  -->
+    <script src="~/Scripts/SliderControl.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.2/jquery.ui.touch-punch.min.js"></script>
+    <!-- Slider  -->
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@15.6.1/dist/nouislider.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/nouislider@15.6.1/dist/nouislider.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/wnumb@1.2.0/wNumb.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    <script src="~/Scripts/L.Geoserver.js"></script>
+    <script src="~/Scripts/leaflet.draw.js"></script>
+
+    <p style="color:#ffffff"> &nbsp; &nbsp; Interactive WEB-GIS Geo-Dashboard </p>
+    <h1><a href="http://leafletjs.com/"></a>&nbsp; &nbsp; &nbsp; Plate Number Vehicle - Live Tracking Polyline Map</h1>
+
+    <div id="sidebar" style="text-align: center;">
+
+        <h1 style="color:rgb(37 118 37);">KPP Mining</h1>
+        <input type="image" src="~/Scripts/Logo_KPP.png" alt="Submit"
+               style="float:none" margin=0 auto; width="150"
+               height="150" ; display:block; />
+        <h3 style="color:white;">Interactive WebGIS</h3>
+        <h3 style="color:white;">Geo-Dashboard</h3>
+        <br />
+
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Plate Number: PM
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="dropdown-1">
+                <li>
+                    <a href="#"><b>PM5006</b></a>
+                    <div class="slider-container">
+                        <div id="slider-speed5006"></div>
+                        <p>Speed</p>
+                        <br />
+                        <div id="slider-altitude5006"></div>
+                        <p>Altitude</p>
+                        <br />
+                        <div id="slider-date5006"></div>
+                        <p>GPS Date Time</p>
+                        <br />
+                        <div id="slider-direction5006"></div>
+                        <p>Direction</p>
+                    </div>
+                </li>
+                <li>
+                    <a href="#"><b>PM2006</b></a>
+                    <div class="slider-container">
+                        <div id="slider-speed2006"></div>
+                        <p>Speed</p>
+                        <br />
+                        <div id="slider-altitude2006"></div>
+                        <p>Altitude</p>
+                        <br />
+                        <div id="slider-date2006"></div>
+                        <p>GPS Date Time</p>
+                        <br />
+                        <div id="slider-direction2006"></div>
+                        <p>Direction</p>
+                    </div>
+                </li>
+                <li>
+                    <a href="#"><b>PM1026</b></a>
+                    <div class="slider-container">
+                        <div id="slider-speed1026"></div>
+                        <p>Speed</p>
+                        <br />
+                        <div id="slider-altitude1026"></div>
+                        <p>Altitude</p>
+                        <br />
+                        <div id="slider-date1026"></div>
+                        <p>GPS Date Time</p>
+                        <br />
+                        <div id="slider-direction1026"></div>
+                        <p>Direction</p>
+                    </div>
+                </li>
+                <!-- Add more plate numbers as needed -->
+            </ul>
+        </div>
+
+        <br />
+
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Plate Number: PEN
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="dropdown-2">
+                <li>
+                    <a href="#"><b>PEN49</b></a>
+                    <div class="slider-container">
+                        <div id="slider-speedPEN49"></div>
+                        <p>Speed</p>
+                        <br />
+                        <div id="slider-altitudePEN49"></div>
+                        <p>Altitude</p>
+                        <br />
+                        <div id="slider-datePEN49"></div>
+                        <p>GPS Date Time</p>
+                        <br />
+                        <div id="slider-directionPEN49"></div>
+                        <p>Direction</p>
+                    </div>
+                </li>
+                <li>
+                    <a href="#"><b>PEN45</b></a>
+                    <div class="slider-container">
+                        <div id="slider-speedPEN45"></div>
+                        <p>Speed</p>
+                        <br />
+                        <div id="slider-altitudePEN45"></div>
+                        <p>Altitude</p>
+                        <br />
+                        <div id="slider-datePEN45"></div>
+                        <p>GPS Date Time</p>
+                        <br />
+                        <div id="slider-directionPEN45"></div>
+                        <p>Direction</p>
+                    </div>
+                </li>
+                <!-- Tambah lagi disini -->
+            </ul>
+        </div>
+    </div>
+
+    <div id="map">
+
+    </div>
+
+    <script>
+
+        //------------------- FUNDAMENTAL MAPPING LEAFLET
+
+        $("#dropdown-1 li").click(function () {
+            $(this).find(".slider-container").fadeToggle();
+        });
+
+        $("#dropdown-2 li").click(function () {
+            $(this).find(".slider-container").fadeToggle();
+        });
+
+        $("#dropdown-1").click(function (event) {
+            event.stopPropagation();
+        });
+
+        // $(".dropdown").click(function () {
+        //     $("#dropdown-1").fadeToggle();
+        // });
+
+        $("#dropdown-2").click(function (event) {
+            event.stopPropagation();
+        });
+
+        $(".dropdown2").click(function () {
+            $("#dropdown-2").fadeToggle();
+        });
+
+        $(document).ready(function () {
+
+            // proj4.defs('EPSG:31700',
+            // '+proj=sterea +lat_0=46 +lon_0=25 +k=0.99975 +x_0=500000 +y_0=500000 +ellps=krass +towgs84=28,-121,-77,0,0,0,0 +units=m +no_defs');
+            // data.proj.proj4.register(proj4);
+
+            var map = L.map('map', {
+                attributionControl: false
+            })
+                .setView([0.859534, 117.835327], 13);
+            mapLink = "<a href='http://openstreetmap.org'>OpenStreetMap</a>";
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+                {
+                    attributionControl: false
+                    // attribution: 'My attribution <a href="http://test.com" target="_blank">My Link</a>'
+                })
+                .addTo(map);
+
+            var wmsLayer = L.Geoserver.wms('http://10.14.101.3:8080/geoserver/wms', {
+                layers: 'INDE:Group_INDE',
+                noWrap: true,
+                maxZoom: 300
+            })
+
+            wmsLayer.addTo(map)
+
+            var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 300
+                //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            });
+
+            var esri = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 300
+                //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            });
+
+            var google = L.tileLayer('http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z} ', {
+                maxZoom: 300
+                //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            });
+
+            var baseMaps = {
+                "OpenStreetMap": osm,
+                "ESRI Imagery": esri,
+                "Google Imagery": google,
+                "KPP Imagery": wmsLayer
+            };
+
+            var baseControl = L.control.layers(baseMaps)
+                .addTo(map);
+
+            var myIcon2 = L.icon({
+                iconUrl: '/Scripts/Logo_KPP.png',
+                iconSize: [15, 15],
+                shadowSize: [10, 10],
+                iconAnchor: [10, 10],
+                shadowAnchor: [10, 10],
+                popupAnchor: [-3, -16]
+            });
+
+            var myIcon3 = L.icon({
+                iconUrl: '/Scripts/truck2.png',
+                iconSize: [25, 25],
+                shadowSize: [10, 10],
+                iconAnchor: [10, 10],
+                shadowAnchor: [10, 10],
+                popupAnchor: [-3, -16]
+            });
+
+            var myIcon = L.icon({
+                iconUrl: '/Scripts/truck.png',
+                iconSize: [15, 15],
+                shadowSize: [10, 10],
+                iconAnchor: [10, 10],
+                shadowAnchor: [10, 10],
+                popupAnchor: [-3, -16]
+            });
+
+            var marker = L.marker([0.859534, 117.835327],
+                { icon: myIcon })
+                .addTo(map);
+
+            map.on('click', function (e) {
+                // console.log(e)
+                var newMarker = L.circleMarker([e.latlng.lat, e.latlng.lng])
+                    .addTo(map);
+                L.Routing.control({
+                    waypoints: [
+                        L.latLng(0.859534, 117.835327),
+                        L.latLng(e.latlng.lat, e.latlng.lng)
+                    ]
+                }).on('routesfound', function (e) {
+                    var routes = e.routes;
+                    //  console.log(routes);
+
+                    e.routes[0].coordinates.forEach(function (coord, index) {
+                        setTimeout(function () {
+                            marker.setLatLng([coord.lat, coord.lng]);
+                        }, 100 * index)
+                    })
+
+                }).addTo(map);
+            });
+
+            //------------------- POLYLINE
+
+            //////////////////////////////////////////////////////////// PM5006
+
+            $.ajax({
+                type: "GET",
+                url: "/Home/getdataPM5006",
+                datatype: "json",
+                success: function (result) {
+
+                    for (var i = 0; i < result.data.length; i++) {
+
+                        const convertDateNow = (milis) => {
+
+                            const param = new Date(milis)
+                            const year = param.getFullYear();
+
+                            const month = param.getMonth() + 1;
+                            const date = param.getDate();
+
+                            const h = param.getHours();
+                            const m = param.getMinutes();
+
+                            const s = param.getSeconds();
+                            return `${year}-${month.toString().length == 1 ? `0${month}` : month}-${date.toString().length == 1 ? `0${date}` : date
+                                } ${h.toString().length == 1 ? `0${h}` : h}:${m.toString().length == 1 ? `0${m}` : m
+                                }:${s.toString().length == 1 ? `0${s}` : s}`;
+                        };
+
+                        var asd22 = moment.utc(result.data[i].GPSDateTime);
+
+                        var date22 = convertDateNow(asd22);
+
+                        var path5006 = {
+                            "type": "LineString",
+                            "features": [
+                                {
+                                    "type": "Feature",
+                                    "geometry": {
+                                        "type": "LineString",
+                                        "coordinates": [[result.data[i].Longitude, result.data[i].Latitude], [result.data[i + 1].Longitude, result.data[i + 1].Latitude]]
+                                    },
+                                    "properties": {
+                                        "speed": result.data[i].Speed,
+                                        "location": result.data[i].Location,
+                                        "date": date22,
+                                    }
+                                },
+
+                            ]
+                        }
+
+                        // console.log(path5006)
+
+                        if (i == 0 || i == result.data.length - 1) {
+
+                            // console.log(result.data[i])
+
+                            var STARTpathpoint5006 = {
+                                "type": "FeatureCollection",
+                                "features": [{
+                                    "geometry": {
+                                        "type": "Point",
+                                        "coordinates": [result.data[i].Longitude, result.data[i].Latitude]
+                                    },
+                                    "type": "Feature",
+                                    "properties": {
+                                        "speed": result.data[i].Speed,
+                                        "location": result.data[i].Location,
+                                        "date": date22,
+                                    }
+                                }]
+                            }
+
+                        }
+
+                        if (i == 0 || i == result.data.length - 2) {
+
+                            console.log(result.data[i])
+
+                            var ENDpathpoint5006 = {
+                                "type": "FeatureCollection",
+                                "features": [{
+                                    "geometry": {
+                                        "type": "Point",
+                                        "coordinates": [result.data[i].Longitude, result.data[i].Latitude]
+                                    },
+                                    "type": "Feature",
+                                    "properties": {
+                                        "speed": result.data[i].Speed,
+                                        "location": result.data[i].Location,
+                                        "date": date22,
+                                    }
+                                }]
+                            }
+
+                        }
+
+                        // console.log(path)
+
+                        function getColor(speed) {
+                            return speed >= 31 ? '#0f8343' :
+                                speed >= 30 ? '#0F5FBC' :
+                                    speed >= 16 ? '#0F5FBC' :
+                                        speed <= 15 ? '#Ffa500' :
+                                            speed > 0 ? '#Ffa500' : '#Ffa500';
+                        }
+
+                        function style5006(feature) {
+                            return {
+                                weight: 5,
+                                opacity: 1,
+                                color: getColor(feature.properties.speed),
+                            };
+                        }
+
+                        var myIcon5006END = L.icon({
+                            iconUrl: '/Scripts/end.png',
+                            iconSize: [55, 55],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var ENDpathpointlayer5006 = L.geoJSON(ENDpathpoint5006, {
+                            onEachFeature: addMyData5006, pointToLayer: function (point, latlng) {
+                                return L.marker(latlng, { icon: myIcon5006END })
+                            }
+                        })
+                            .addTo(map);
+
+                        var myIcon5006START = L.icon({
+                            iconUrl: '/Scripts/start3.png',
+                            iconSize: [55, 55],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var STARTpathpointlayer5006 = L.geoJSON(STARTpathpoint5006, {
+                            onEachFeature: addMyData5006, pointToLayer: function (point, latlng) {
+                                return L.marker(latlng, { icon: myIcon5006START })
+                            }
+                        })
+                            .addTo(map);
+
+                        var zmyIconx = L.icon({
+                            iconUrl: '/Scripts/truck.png',
+                            iconSize: [15, 15],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var pathlayer5006 = L.geoJSON(path5006, {
+                            style: style5006,
+                            onEachFeature: function (feature, layer) {
+                                // filter slider
+                                mylayer5006.addLayer(layer),
+                                    layer.bindTooltip(feature.properties.location.substring(0, 10),
+                                        { permanent: true, className: 'label' }
+                                    ).addTo(map);
+                            }
+                        })
+
+                        //var arrowHead = L.polylineDecorator(pathlayer5006, {
+                        //    patterns: [
+                        //        { offset: '100%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 15, pathOptions: { fillOpacity: 1, weight: 0 } }) }
+                        //    ]
+                        //}).addTo(map);
+
+                    }
+
+                }
+
+            });
+
+            //////////////////////////////////////////////////////////// PM5006
+
+            //------------------------------------------------------------------------------------------------
+
+            //////////////////////////////////////////////////////////// PM2006
+
+            $.ajax({
+                type: "GET",
+                url: "/Home/getdataPM2006",
+                datatype: "json",
+                success: function (result) {
+
+                    for (var i = 0; i < result.data.length; i++) {
+
+                        const convertDateNow = (milis) => {
+
+                            const param = new Date(milis)
+                            const year = param.getFullYear();
+
+                            const month = param.getMonth() + 1;
+                            const date = param.getDate();
+
+                            const h = param.getHours();
+                            const m = param.getMinutes();
+
+                            const s = param.getSeconds();
+                            return `${year}-${month.toString().length == 1 ? `0${month}` : month}-${date.toString().length == 1 ? `0${date}` : date
+                                } ${h.toString().length == 1 ? `0${h}` : h}:${m.toString().length == 1 ? `0${m}` : m
+                                }:${s.toString().length == 1 ? `0${s}` : s}`;
+                        };
+
+                        var asd22 = moment.utc(result.data[i].GPSDateTime);
+
+                        var date22 = convertDateNow(asd22);
+
+                        var path2006 = {
+                            "type": "LineString",
+                            "features": [
+                                {
+                                    "type": "Feature",
+                                    "geometry": {
+                                        "type": "LineString",
+                                        "coordinates": [[result.data[i].Longitude, result.data[i].Latitude], [result.data[i + 1].Longitude, result.data[i + 1].Latitude]]
+                                    },
+                                    "properties": {
+                                        "speed": result.data[i].Speed,
+                                        "location": result.data[i].Location,
+                                        "date": date22,
+                                    }
+                                },
+
+                            ]
+                        }
+
+                        // console.log(path2006)
+
+                        if (i == 0 || i == result.data.length - 1) {
+
+                            // console.log(result.data[i])
+
+                            var STARTpathpoint2006 = {
+                                "type": "FeatureCollection",
+                                "features": [{
+                                    "geometry": {
+                                        "type": "Point",
+                                        "coordinates": [result.data[i].Longitude, result.data[i].Latitude]
+                                    },
+                                    "type": "Feature",
+                                    "properties": {
+                                        "speed": result.data[i].Speed,
+                                        "location": result.data[i].Location,
+                                        "date": date22,
+                                    }
+                                }]
+                            }
+
+                        }
+
+                        if (i == 0 || i == result.data.length - 2) {
+
+                            console.log(result.data[i])
+
+                            var ENDpathpoint2006 = {
+                                "type": "FeatureCollection",
+                                "features": [{
+                                    "geometry": {
+                                        "type": "Point",
+                                        "coordinates": [result.data[i].Longitude, result.data[i].Latitude]
+                                    },
+                                    "type": "Feature",
+                                    "properties": {
+                                        "speed": result.data[i].Speed,
+                                        "location": result.data[i].Location,
+                                        "date": date22,
+                                    }
+                                }]
+                            }
+
+                        }
+
+                        // console.log(path)
+
+                        function getColor(speed) {
+                            return speed >= 31 ? '#0f8343' :
+                                speed >= 30 ? '#0F5FBC' :
+                                    speed >= 16 ? '#0F5FBC' :
+                                        speed <= 15 ? '#Ffa500' :
+                                            speed > 0 ? '#Ffa500' : '#Ffa500';
+                        }
+
+                        function style2006(feature) {
+                            return {
+                                weight: 5,
+                                opacity: 1,
+                                color: getColor(feature.properties.speed),
+                            };
+                        }
+
+                        var myIcon2006END = L.icon({
+                            iconUrl: '/Scripts/end.png',
+                            iconSize: [55, 55],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var ENDpathpointlayer2006 = L.geoJSON(ENDpathpoint2006, {
+                            onEachFeature: addMyData2006, pointToLayer: function (point, latlng) {
+                                return L.marker(latlng, { icon: myIcon2006END })
+                            }
+                        })
+                            .addTo(map);
+
+                        var myIcon2006START = L.icon({
+                            iconUrl: '/Scripts/start3.png',
+                            iconSize: [55, 55],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var STARTpathpointlayer2006 = L.geoJSON(STARTpathpoint2006, {
+                            onEachFeature: addMyData2006, pointToLayer: function (point, latlng) {
+                                return L.marker(latlng, { icon: myIcon2006START })
+                            }
+                        })
+                            .addTo(map);
+
+                        var zmyIconx = L.icon({
+                            iconUrl: '/Scripts/truck.png',
+                            iconSize: [15, 15],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var pathlayer2006 = L.geoJSON(path2006, {
+                            style: style2006,
+                            onEachFeature: function (feature, layer) {
+                                // filter slider
+                                mylayer2006.addLayer(layer),
+                                    layer.bindTooltip(feature.properties.location.substring(0, 10),
+                                        { permanent: true, className: 'label' }
+                                    ).addTo(map);
+                            }
+                        })
+
+                        //var arrowHead = L.polylineDecorator(pathlayer2006, {
+                        //    patterns: [
+                        //        { offset: '100%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 15, pathOptions: { fillOpacity: 1, weight: 0 } }) }
+                        //    ]
+                        //}).addTo(map);
+
+                    }
+
+                }
+
+            });
+
+            //////////////////////////////////////////////////////////// PM2006
+
+            //------------------------------------------------------------------------------------------------
+
+            //////////////////////////////////////////////////////////// PM1026
+
+            $.ajax({
+                type: "GET",
+                url: "/Home/getdataPM1026",
+                datatype: "json",
+                success: function (result) {
+
+                    for (var i = 0; i < result.data.length; i++) {
+
+                        const convertDateNow = (milis) => {
+
+                            const param = new Date(milis)
+                            const year = param.getFullYear();
+
+                            const month = param.getMonth() + 1;
+                            const date = param.getDate();
+
+                            const h = param.getHours();
+                            const m = param.getMinutes();
+
+                            const s = param.getSeconds();
+                            return `${year}-${month.toString().length == 1 ? `0${month}` : month}-${date.toString().length == 1 ? `0${date}` : date
+                                } ${h.toString().length == 1 ? `0${h}` : h}:${m.toString().length == 1 ? `0${m}` : m
+                                }:${s.toString().length == 1 ? `0${s}` : s}`;
+                        };
+
+                        var asd22 = moment.utc(result.data[i].GPSDateTime);
+
+                        var date22 = convertDateNow(asd22);
+
+                        var path1026 = {
+                            "type": "LineString",
+                            "features": [
+                                {
+                                    "type": "Feature",
+                                    "geometry": {
+                                        "type": "LineString",
+                                        "coordinates": [[result.data[i].Longitude, result.data[i].Latitude], [result.data[i + 1].Longitude, result.data[i + 1].Latitude]]
+                                    },
+                                    "properties": {
+                                        "speed": result.data[i].Speed,
+                                        "location": result.data[i].Location,
+                                        "date": date22,
+                                    }
+                                },
+
+                            ]
+                        }
+
+                        // console.log(path1026)
+
+                        if (i == 0 || i == result.data.length - 1) {
+
+                            // console.log(result.data[i])
+
+                            var STARTpathpoint1026 = {
+                                "type": "FeatureCollection",
+                                "features": [{
+                                    "geometry": {
+                                        "type": "Point",
+                                        "coordinates": [result.data[i].Longitude, result.data[i].Latitude]
+                                    },
+                                    "type": "Feature",
+                                    "properties": {
+                                        "speed": result.data[i].Speed,
+                                        "location": result.data[i].Location,
+                                        "date": date22,
+                                    }
+                                }]
+                            }
+
+                        }
+
+                        if (i == 0 || i == result.data.length - 2) {
+
+                            console.log(result.data[i])
+
+                            var ENDpathpoint1026 = {
+                                "type": "FeatureCollection",
+                                "features": [{
+                                    "geometry": {
+                                        "type": "Point",
+                                        "coordinates": [result.data[i].Longitude, result.data[i].Latitude]
+                                    },
+                                    "type": "Feature",
+                                    "properties": {
+                                        "speed": result.data[i].Speed,
+                                        "location": result.data[i].Location,
+                                        "date": date22,
+                                    }
+                                }]
+                            }
+
+                        }
+
+                        // console.log(path)
+
+                        function getColor(speed) {
+                            return speed >= 31 ? '#0f8343' :
+                                speed >= 30 ? '#0F5FBC' :
+                                    speed >= 16 ? '#0F5FBC' :
+                                        speed <= 15 ? '#Ffa500' :
+                                            speed > 0 ? '#Ffa500' : '#Ffa500';
+                        }
+
+                        function style1026(feature) {
+                            return {
+                                weight: 5,
+                                opacity: 1,
+                                color: getColor(feature.properties.speed),
+                            };
+                        }
+
+                        var myIcon1026END = L.icon({
+                            iconUrl: '/Scripts/end.png',
+                            iconSize: [55, 55],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var ENDpathpointlayer1026 = L.geoJSON(ENDpathpoint1026, {
+                            onEachFeature: addMyData1026, pointToLayer: function (point, latlng) {
+                                return L.marker(latlng, { icon: myIcon1026END })
+                            }
+                        })
+                            .addTo(map);
+
+                        var myIcon1026START = L.icon({
+                            iconUrl: '/Scripts/start3.png',
+                            iconSize: [55, 55],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var STARTpathpointlayer1026 = L.geoJSON(STARTpathpoint1026, {
+                            onEachFeature: addMyData1026, pointToLayer: function (point, latlng) {
+                                return L.marker(latlng, { icon: myIcon1026START })
+                            }
+                        })
+                            .addTo(map);
+
+                        var zmyIconx = L.icon({
+                            iconUrl: '/Scripts/truck.png',
+                            iconSize: [15, 15],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var pathlayer1026 = L.geoJSON(path1026, {
+                            style: style1026,
+                            onEachFeature: function (feature, layer) {
+                                // filter slider
+                                mylayer1026.addLayer(layer),
+                                    layer.bindTooltip(feature.properties.location.substring(0, 10),
+                                        { permanent: true, className: 'label' }
+                                    ).addTo(map);
+                            }
+                        })
+
+                        //var arrowHead = L.polylineDecorator(pathlayer1026, {
+                        //    patterns: [
+                        //        { offset: '100%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 15, pathOptions: { fillOpacity: 1, weight: 0 } }) }
+                        //    ]
+                        //}).addTo(map);
+
+                    }
+
+                }
+
+            });
+
+            //////////////////////////////////////////////////////////// PM1026
+
+            //------------------------------------------------------------------------------------------------
+
+            //////////////////////////////////////////////////////////// PEN49
+
+            $.ajax({
+                type: "GET",
+                url: "/Home/getdataPEN49",
+                //?Plate_No
+                datatype: "json",
+                success: function (result) {
+
+                    for (var i = 0; i < result.data.length; i++) {
+
+                        const convertDateNow = (milis) => {
+
+                            const param = new Date(milis)
+                            const year = param.getFullYear();
+
+                            const month = param.getMonth() + 1;
+                            const date = param.getDate();
+
+                            const h = param.getHours();
+                            const m = param.getMinutes();
+
+                            const s = param.getSeconds();
+                            return `${year}-${month.toString().length == 1 ? `0${month}` : month}-${date.toString().length == 1 ? `0${date}` : date
+                                } ${h.toString().length == 1 ? `0${h}` : h}:${m.toString().length == 1 ? `0${m}` : m
+                                }:${s.toString().length == 1 ? `0${s}` : s}`;
+                        };
+
+                        var asd22 = moment.utc(result.data[i].GPSDateTime);
+
+                        var date22 = convertDateNow(asd22);
+
+                        var pathPEN49 = {
+                            "type": "LineString",
+                            "features": [
+                                {
+                                    "type": "Feature",
+                                    "geometry": {
+                                        "type": "LineString",
+                                        "coordinates": [[result.data[i].Longitude, result.data[i].Latitude], [result.data[i + 1].Longitude, result.data[i + 1].Latitude]]
+                                    },
+                                    "properties": {
+                                        "speed": result.data[i].Speed,
+                                        "location": result.data[i].Location,
+                                        "date": date22,
+                                    }
+                                },
+
+                            ]
+                        }
+
+                        // console.log(pathPEN49)
+
+                        if (i == 0 || i == result.data.length - 1) {
+
+                            // console.log(result.data[i])
+
+                            var STARTpathpointPEN49 = {
+                                "type": "FeatureCollection",
+                                "features": [{
+                                    "geometry": {
+                                        "type": "Point",
+                                        "coordinates": [result.data[i].Longitude, result.data[i].Latitude]
+                                    },
+                                    "type": "Feature",
+                                    "properties": {
+                                        "speed": result.data[i].Speed,
+                                        "location": result.data[i].Location,
+                                        "date": date22,
+                                    }
+                                }]
+                            }
+
+                        }
+
+                        if (i == 0 || i == result.data.length - 2) {
+
+                            console.log(result.data[i])
+
+                            var ENDpathpointPEN49 = {
+                                "type": "FeatureCollection",
+                                "features": [{
+                                    "geometry": {
+                                        "type": "Point",
+                                        "coordinates": [result.data[i].Longitude, result.data[i].Latitude]
+                                    },
+                                    "type": "Feature",
+                                    "properties": {
+                                        "speed": result.data[i].Speed,
+                                        "location": result.data[i].Location,
+                                        "date": date22,
+                                    }
+                                }]
+                            }
+
+                        }
+
+                        // console.log(path)
+
+                        function getColor(speed) {
+                            return speed >= 31 ? '#0f8343' :
+                                speed >= 30 ? '#0F5FBC' :
+                                    speed >= 16 ? '#0F5FBC' :
+                                        speed <= 15 ? '#Ffa500' :
+                                            speed > 0 ? '#Ffa500' : '#Ffa500';
+                        }
+
+                        function stylePEN49(feature) {
+                            return {
+                                weight: 5,
+                                opacity: 1,
+                                color: getColor(feature.properties.speed),
+                            };
+                        }
+
+                        var myIconPEN49END = L.icon({
+                            iconUrl: '/Scripts/end.png',
+                            iconSize: [55, 55],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var ENDpathpointlayerPEN49 = L.geoJSON(ENDpathpointPEN49, {
+                            onEachFeature: addMyDataPEN49, pointToLayer: function (point, latlng) {
+                                return L.marker(latlng, { icon: myIconPEN49END })
+                            }
+                        })
+                            .addTo(map);
+
+                        var myIconPEN49START = L.icon({
+                            iconUrl: '/Scripts/start3.png',
+                            iconSize: [55, 55],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var STARTpathpointlayerPEN49 = L.geoJSON(STARTpathpointPEN49, {
+                            onEachFeature: addMyDataPEN49, pointToLayer: function (point, latlng) {
+                                return L.marker(latlng, { icon: myIconPEN49START })
+                            }
+                        })
+                            .addTo(map);
+
+                        var zmyIconx = L.icon({
+                            iconUrl: '/Scripts/truck.png',
+                            iconSize: [15, 15],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var pathlayerPEN49 = L.geoJSON(pathPEN49, {
+                            style: stylePEN49,
+                            onEachFeature: function (feature, layer) {
+                                // filter slider
+                                mylayerPEN49.addLayer(layer),
+                                    layer.bindTooltip(feature.properties.location.substring(0, 10),
+                                        { permanent: true, className: 'label' }
+                                    ).addTo(map);
+                            }
+                        })
+
+                        //var arrowHead = L.polylineDecorator(pathlayerPEN49, {
+                        //    patterns: [
+                        //        { offset: '100%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 15, pathOptions: { fillOpacity: 1, weight: 0 } }) }
+                        //    ]
+                        //}).addTo(map);
+
+                    }
+
+                }
+
+            });
+
+            //////////////////////////////////////////////////////////// PEN49
+
+            //------------------------------------------------------------------------------------------------
+
+            //////////////////////////////////////////////////////////// PEN45
+
+            $.ajax({
+                type: "GET",
+                url: "/Home/getdataPEN45",
+                datatype: "json",
+                success: function (result) {
+
+                    for (var i = 0; i < result.data.length; i++) {
+
+                        const convertDateNow = (milis) => {
+
+                            const param = new Date(milis)
+                            const year = param.getFullYear();
+
+                            const month = param.getMonth() + 1;
+                            const date = param.getDate();
+
+                            const h = param.getHours();
+                            const m = param.getMinutes();
+
+                            const s = param.getSeconds();
+                            return `${year}-${month.toString().length == 1 ? `0${month}` : month}-${date.toString().length == 1 ? `0${date}` : date
+                                } ${h.toString().length == 1 ? `0${h}` : h}:${m.toString().length == 1 ? `0${m}` : m
+                                }:${s.toString().length == 1 ? `0${s}` : s}`;
+                        };
+
+                        var asd22 = moment.utc(result.data[i].GPSDateTime);
+
+                        var date22 = convertDateNow(asd22);
+
+                        var pathPEN45 = {
+                            "type": "LineString",
+                            "features": [
+                                {
+                                    "type": "Feature",
+                                    "geometry": {
+                                        "type": "LineString",
+                                        "coordinates": [[result.data[i].Longitude, result.data[i].Latitude], [result.data[i + 1].Longitude, result.data[i + 1].Latitude]]
+                                    },
+                                    "properties": {
+                                        "speed": result.data[i].Speed,
+                                        "location": result.data[i].Location,
+                                        "date": date22,
+                                    }
+                                },
+
+                            ]
+                        }
+
+                        // console.log(pathPEN45)
+
+                        if (i == 0 || i == result.data.length - 1) {
+
+                            // console.log(result.data[i])
+
+                            var STARTpathpointPEN45 = {
+                                "type": "FeatureCollection",
+                                "features": [{
+                                    "geometry": {
+                                        "type": "Point",
+                                        "coordinates": [result.data[i].Longitude, result.data[i].Latitude]
+                                    },
+                                    "type": "Feature",
+                                    "properties": {
+                                        "speed": result.data[i].Speed,
+                                        "location": result.data[i].Location,
+                                        "date": date22,
+                                    }
+                                }]
+                            }
+
+                        }
+
+                        if (i == 0 || i == result.data.length - 2) {
+
+                            console.log(result.data[i])
+
+                            var ENDpathpointPEN45 = {
+                                "type": "FeatureCollection",
+                                "features": [{
+                                    "geometry": {
+                                        "type": "Point",
+                                        "coordinates": [result.data[i].Longitude, result.data[i].Latitude]
+                                    },
+                                    "type": "Feature",
+                                    "properties": {
+                                        "speed": result.data[i].Speed,
+                                        "location": result.data[i].Location,
+                                        "date": date22,
+                                    }
+                                }]
+                            }
+
+                        }
+
+                        // console.log(path)
+
+                        function getColor(speed) {
+                            return speed >= 31 ? '#0f8343' :
+                                speed >= 30 ? '#0F5FBC' :
+                                    speed >= 16 ? '#0F5FBC' :
+                                        speed <= 15 ? '#Ffa500' :
+                                            speed > 0 ? '#Ffa500' : '#Ffa500';
+                        }
+
+                        function stylePEN45(feature) {
+                            return {
+                                weight: 5,
+                                opacity: 1,
+                                color: getColor(feature.properties.speed),
+                            };
+                        }
+
+                        var myIconPEN45END = L.icon({
+                            iconUrl: '/Scripts/end.png',
+                            iconSize: [55, 55],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var ENDpathpointlayerPEN45 = L.geoJSON(ENDpathpointPEN45, {
+                            onEachFeature: addMyDataPEN45, pointToLayer: function (point, latlng) {
+                                return L.marker(latlng, { icon: myIconPEN45END })
+                            }
+                        })
+                            .addTo(map);
+
+                        var myIconPEN45START = L.icon({
+                            iconUrl: '/Scripts/start3.png',
+                            iconSize: [55, 55],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var STARTpathpointlayerPEN45 = L.geoJSON(STARTpathpointPEN45, {
+                            onEachFeature: addMyDataPEN45, pointToLayer: function (point, latlng) {
+                                return L.marker(latlng, { icon: myIconPEN45START })
+                            }
+                        })
+                            .addTo(map);
+
+                        var zmyIconx = L.icon({
+                            iconUrl: '/Scripts/truck.png',
+                            iconSize: [15, 15],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var pathlayerPEN45 = L.geoJSON(pathPEN45, {
+                            style: stylePEN45,
+                            onEachFeature: function (feature, layer) {
+                                // filter slider
+                                mylayerPEN45.addLayer(layer),
+                                    layer.bindTooltip(feature.properties.location.substring(0, 10),
+                                        { permanent: true, className: 'label' }
+                                    ).addTo(map);
+                            }
+                        })
+
+                        //var arrowHead = L.polylineDecorator(pathlayerPEN45, {
+                        //    patterns: [
+                        //        { offset: '100%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 15, pathOptions: { fillOpacity: 1, weight: 0 } }) }
+                        //    ]
+                        //}).addTo(map);
+
+                    }
+
+                }
+
+            });
+
+            //////////////////////////////////////////////////////////// PEN45
+
+            //------------------------------------------------------------------------------------------------
+
+            //------------------- FITUR TAMBAHAN
+
+            const markerorange = L.circleMarker([0.86293, 117.829948],
+                { color: 'orange' })
+            //  .addTo(map);
+
+            const markerblue = L.circleMarker([0.86293, 117.829948],
+                { color: 'blue' })
+            //  .addTo(map);
+
+            const markergreen = L.circleMarker([0.86293, 117.829948],
+                { color: 'green' })
+            //  .addTo(map);
+
+            const items = {
+                "≤ 15 Km / H": markerorange,
+                "16 - 30 Km / H": markerblue,
+                "≥ 31 Km / H": markergreen
+            };
+
+            function getColor(d) {
+                return d >= 31 ? '#0f8343' :
+                    d >= 30 ? '#0F5FBC' :
+                        d >= 16 ? '#0F5FBC' :
+                            d <= 15 ? '#Ffa500' :
+                                d > 0 ? '#Ffa500' : '#Ffa500';
+            }
+
+            const legend = L.control({ position: 'bottomright' });
+
+            legend.onAdd = function (map) {
+
+                const div = L.DomUtil.create('div', 'info legend');
+                const grades = [0, 15, 31];
+                const labels = ['<strong>Speed Indicator (Km/H)</strong>'];
+                let from, to;
+
+                for (var i = 0; i < grades.length; i++) {
+                    from = grades[i];
+                    to = grades[i + 1];
+                    labels.push(
+                        '<i class="colorcircle" style="background:' + getColor(from + 1)
+                        + '"></i> ' + from + (to ? '&ndash;' + to : '+'));
+                }
+                div.innerHTML = labels.join('<br>');
+                return div;
+            };
+
+            legend.addTo(map);
+
+            var mylayer2006 = L.layerGroup().addTo(map)
+
+            function addMyData2006(feature, layer) {
+                mylayer2006.addLayer(layer)
+            }
+
+            var mylayer1026 = L.layerGroup().addTo(map)
+
+            function addMyData1026(feature, layer) {
+                mylayer1026.addLayer(layer)
+            }
+
+            var mylayer5006 = L.layerGroup().addTo(map)
+
+            function addMyData5006(feature, layer) {
+                mylayer5006.addLayer(layer)
+            }
+
+            let basemapControl = {
+            }
+
+            let layerControl = {
+                "PM5006": mylayer5006,
+                "PM2006": mylayer2006,
+                "PM1026": mylayer1026
+            }
+
+            L.control.layers(basemapControl, layerControl)
+                .addTo(map)
+
+            var mylayerPEN49 = L.layerGroup().addTo(map)
+
+            function addMyDataPEN49(feature, layer) {
+                mylayerPEN49.addLayer(layer)
+            }
+
+            var mylayerPEN45 = L.layerGroup().addTo(map)
+
+            function addMyDataPEN45(feature, layer) {
+                mylayerPEN45.addLayer(layer)
+            }
+
+            let basemapControlPEN = {
+            }
+
+            let layerControlPEN = {
+                "PEN49": mylayerPEN49,
+                "PEN45": mylayerPEN45
+            }
+
+            L.control.layers(basemapControlPEN, layerControlPEN)
+                .addTo(map)
+
+            //------------------- POI MARKER
+
+            /////////////////////////////////////////////////////////////// PM5006
+
+            $.ajax({
+                type: "GET",
+                url: "/Home/getdataPM5006",
+                datatype: "json",
+                success: function (result) {
+
+                    var pathpointArray = []
+                    var minDate5006, maxDate5006;
+                    var minSpeed5006, maxSpeed5006;
+                    var minAltitude5006, maxAltitude5006;
+                    var minDirection5006, maxDirection5006;
+
+                    for (var i = 0; i < result.data.length; i++) {
+
+
+                        var wok = result.data[i].Altitude
+
+                        // console.log(wok)
+
+                        const convertDateNow = (milis) => {
+
+                            const param = new Date(milis)
+                            const year = param.getFullYear();
+
+                            const month = param.getMonth() + 1;
+                            const date = param.getDate();
+
+                            const h = param.getHours();
+                            const m = param.getMinutes();
+
+                            const s = param.getSeconds();
+                            return `${year}-${month.toString().length == 1 ? `0${month}` : month}-${date.toString().length == 1 ? `0${date}` : date
+                                } ${h.toString().length == 1 ? `0${h}` : h}:${m.toString().length == 1 ? `0${m}` : m
+                                }:${s.toString().length == 1 ? `0${s}` : s}`;
+                        };
+
+                        var zasd22 = moment.utc(result.data[i].GPSDateTime);
+
+                        var zdate22 = convertDateNow(zasd22);
+
+                        var date2222 = new Date(zdate22);
+
+                        console.log(date2222.valueOf())
+
+                        if (!minDate5006 || date2222 < minDate5006) {
+                            minDate5006 = date2222
+                        }
+
+                        if (!maxDate5006 || date2222 > maxDate5006) {
+                            maxDate5006 = date2222
+                        }
+
+                        var speed5006 = result.data[i].Speed;
+
+                        console.log(speed5006.valueOf)
+
+                        if (!minSpeed5006 || speed5006 < minSpeed5006) {
+                            minSpeed5006 = speed5006
+                        }
+
+                        if (!maxSpeed5006 || speed5006 > maxSpeed5006) {
+                            maxSpeed5006 = speed5006
+                        }
+
+                        var altitude5006 = result.data[i].Altitude
+
+                        if (!minAltitude5006 || altitude5006 < minAltitude5006) {
+                            minAltitude5006 = altitude5006
+                        }
+
+                        if (!maxAltitude5006 || altitude5006 > maxAltitude5006) {
+                            maxAltitude5006 = altitude5006
+                        }
+
+                        var direction5006 = result.data[i].Direction
+
+                        if (!minDirection5006 || direction5006 < minDirection5006) {
+                            minDirection5006 = direction5006
+                        }
+
+                        if (!maxDirection5006 || direction5006 > maxDirection5006) {
+                            maxDirection5006 = direction5006
+                        }
+                        
+
+                        var formatzdate22 = date2222.toISOString();
+
+                        //  console.log(zdate22)
+
+                        //  console.log(formatzdate22)
+
+                        var zzpathpoint5006 = {
+                            "type": "FeatureCollection",
+                            "features": [{
+                                "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [result.data[i].Longitude, result.data[i].Latitude]
+                                },
+                                "type": "Feature",
+                                "properties": {
+                                    "speed": result.data[i].Speed,
+                                    "location": result.data[i].Location,
+                                    "time": (new Date(formatzdate22)).valueOf(),
+                                    "direction": result.data[i].Direction,
+                                    "altitude": result.data[i].Altitude,
+                                }
+                            }]
+                        };
+
+                        console.log(zzpathpoint5006)
+
+                        var popup33 = '<b>Speed(Km/H): </b>' + result.data[i].Speed +
+                            '</br><b>Latitude: <b>' + result.data[i].Latitude +
+                            '</br><b>Longitude: <b>' + result.data[i].Longitude +
+                            '</br><b>Plate Number: <b>' + result.data[i].Plate_No +
+                            '</br><b>Direction:  <b>' + result.data[i].Direction +
+                            '</br><b>GPS Date Time: <b>' + zdate22 +
+                            '</br><b>Altitude: <b>' + result.data[i].Altitude;
+
+                        var iconpathpoint5006 = L.icon({
+                            iconUrl: '/Scripts/truck.png',
+                            iconSize: [15, 15],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var zzpathpointlayer5006 = L.geoJSON(zzpathpoint5006, {
+                            onEachFeature: addMyData5006, pointToLayer: function (point, latlng) {
+                                //if (point.properties.speed < min5006 || min5006 === 0) {
+                                //    min5006 = point.properties.speed;
+                                //}
+                                //if (point.properties.speed > max5006) {
+                                //    max5006 = point.properties.speed;
+                                //}
+                                return L.marker(latlng, { icon: iconpathpoint5006 })
+                            }
+                        }).bindPopup(popup33)
+                            .openPopup()
+                            .addTo(map);
+
+                        pathpointArray.push(zzpathpointlayer5006)
+
+                        //   console.log(zzpathpoint5006)
+                    }
+
+                    // console.log(zzpathpointlayer5006)
+
+                    var sliderspeed5006 = document.getElementById('slider-speed5006');
+
+                    //var minspeed5006 = 1;
+                    //var maxspeed5006 = 100;
+
+                    noUiSlider.create(sliderspeed5006, {
+                        start: [minSpeed5006, maxSpeed5006],
+                        tooltips: true,
+                        connect: true,
+                        range: {
+                            'min': minSpeed5006,
+                            'max': maxSpeed5006
+                        }
+                    }).on('slide', function (e) {
+                        console.log(e)
+
+                        //  console.log(pathpointArray)
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                // console.log(zzpathpointlayer)
+                                if (layer.feature.properties.speed >= parseFloat(e[0]) && layer.feature.properties.speed <= parseFloat(e[1])) {
+                                    layer.addTo(map);
+
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                    var slideraltitude5006 = document.getElementById('slider-altitude5006');
+
+                    noUiSlider.create(slideraltitude5006, {
+                        start: [minAltitude5006, maxAltitude5006],
+                        tooltips: true,
+                        connect: true,
+                        range: {
+                            'min': minAltitude5006,
+                            'max': maxAltitude5006
+                        }
+                    }).on('slide', function (e) {
+                        console.log(e)
+
+                        //  console.log(pathpointArray)
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                // console.log(zzpathpointlayer)
+                                if (layer.feature.properties.altitude >= parseFloat(e[0]) && layer.feature.properties.altitude <= parseFloat(e[1])) {
+                                    layer.addTo(map);
+
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                    var date = new Date(formatzdate22);
+                    //  var formattedDate = date.toLocaleDateString() + " " + date.toLocaleTimeString();
+
+                    var sliderdate5006 = document.getElementById('slider-date5006');
+
+                    function timestamp(str) {
+                        return new Date(str).getTime();
+                    }
+
+                    var minzz = (new Date("2020")).valueOf();
+
+                    noUiSlider.create(sliderdate5006, {
+                        // range dari timestamp slider
+                        start: [minDate5006.valueOf(), maxDate5006.valueOf()],
+                        range: {
+                            'min': minDate5006.valueOf(),
+                            'max': maxDate5006.valueOf()
+                        },
+
+                        // urutan slider geser2annya
+                        step: 60 * 60 * 1000,
+
+                        //// posisi awal dari geseran slider
+                        tooltips: [
+                            {
+                                to: function (value) {
+                                    return new Date(value).toLocaleString();
+                                },
+                                from: function (value) {
+                                    return value;
+                                }
+                            },
+                            {
+                                to: function (value) {
+                                    return new Date(value).toLocaleString();
+                                },
+                                from: function (value) {
+                                    return value;
+                                }
+                            },
+                        ],
+                        connect: true,
+                        format: wNumb({
+                            decimals: 0
+                        })
+                        //connect: true,
+                        //pips: {
+                        //    mode: 'positions',
+                        //    values: [0, 25, 50, 75, 100],
+                        //    density: 4
+                        //}
+                        //format: {
+                        //    to: function (value) {
+                        //        console.log(value)
+                        //        return value;
+                        //    },
+                        //    from: function (value) {
+                        //        return value;
+                        //    }
+                        //}
+                    })
+                    sliderdate5006.noUiSlider.on('slide', function (e) {
+
+                        console.log(e[1])
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                if (layer.feature.properties.time >= (e[0]) && layer.feature.properties.time <= (e[1])) {
+                                    if (!layer._map) {
+                                        layer.addTo(map);
+                                    }
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                    var sliderdirection5006 = document.getElementById('slider-direction5006');
+
+                    noUiSlider.create(sliderdirection5006, {
+                        start: [minDirection5006, maxDirection5006],
+                        tooltips: true,
+                        connect: true,
+                        range: {
+                            'min': minDirection5006,
+                            'max': maxDirection5006
+                        }
+                    }).on('slide', function (e) {
+                        console.log(e)
+
+                        //  console.log(pathpointArray)
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                // console.log(zzpathpointlayer)
+                                if (layer.feature.properties.direction >= parseFloat(e[0]) && layer.feature.properties.direction <= parseFloat(e[1])) {
+                                    layer.addTo(map);
+
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                }
+            });
+
+            /////////////////////////////////////////////////////////////// PM5006
+
+            //------------------------------------------------------------------------------------------------
+
+            /////////////////////////////////////////////////////////////// PM2006
+
+            $.ajax({
+                type: "GET",
+                url: "/Home/getdataPM2006",
+                datatype: "json",
+                success: function (result) {
+
+                    var pathpointArray = []
+                    var minDate2006, maxDate2006;
+                    var minSpeed2006, maxSpeed2006;
+                    var minAltitude2006, maxAltitude2006;
+                    var minDirection2006, maxDirection2006;
+
+                    for (var i = 0; i < result.data.length; i++) {
+
+
+                        var wok = result.data[i].Altitude
+
+                        // console.log(wok)
+
+                        const convertDateNow = (milis) => {
+
+                            const param = new Date(milis)
+                            const year = param.getFullYear();
+
+                            const month = param.getMonth() + 1;
+                            const date = param.getDate();
+
+                            const h = param.getHours();
+                            const m = param.getMinutes();
+
+                            const s = param.getSeconds();
+                            return `${year}-${month.toString().length == 1 ? `0${month}` : month}-${date.toString().length == 1 ? `0${date}` : date
+                                } ${h.toString().length == 1 ? `0${h}` : h}:${m.toString().length == 1 ? `0${m}` : m
+                                }:${s.toString().length == 1 ? `0${s}` : s}`;
+                        };
+
+                        var zasd22 = moment.utc(result.data[i].GPSDateTime);
+
+                        var zdate22 = convertDateNow(zasd22);
+
+                        var date2222 = new Date(zdate22);
+
+                        console.log(date2222.valueOf())
+
+                        if (!minDate2006 || date2222 < minDate2006) {
+                            minDate2006 = date2222
+                        }
+
+                        if (!maxDate2006 || date2222 > maxDate2006) {
+                            maxDate2006 = date2222
+                        }
+
+                        var speed2006 = result.data[i].Speed;
+
+                        console.log(speed2006.valueOf)
+
+                        if (!minSpeed2006 || speed2006 < minSpeed2006) {
+                            minSpeed2006 = speed2006
+                        }
+
+                        if (!maxSpeed2006 || speed2006 > maxSpeed2006) {
+                            maxSpeed2006 = speed2006
+                        }
+
+                        var altitude2006 = result.data[i].Altitude
+
+                        if (!minAltitude2006 || altitude2006 < minAltitude2006) {
+                            minAltitude2006 = altitude2006
+                        }
+
+                        if (!maxAltitude2006 || altitude2006 > maxAltitude2006) {
+                            maxAltitude2006 = altitude2006
+                        }
+
+                        var direction2006 = result.data[i].Direction
+
+                        if (!minDirection2006 || direction2006 < minDirection2006) {
+                            minDirection2006 = direction2006
+                        }
+
+                        if (!maxDirection2006 || direction2006 > maxDirection2006) {
+                            maxDirection2006 = direction2006
+                        }
+
+
+                        var formatzdate22 = date2222.toISOString();
+
+                        //  console.log(zdate22)
+
+                        //  console.log(formatzdate22)
+
+                        var zzpathpoint2006 = {
+                            "type": "FeatureCollection",
+                            "features": [{
+                                "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [result.data[i].Longitude, result.data[i].Latitude]
+                                },
+                                "type": "Feature",
+                                "properties": {
+                                    "speed": result.data[i].Speed,
+                                    "location": result.data[i].Location,
+                                    "time": (new Date(formatzdate22)).valueOf(),
+                                    "direction": result.data[i].Direction,
+                                    "altitude": result.data[i].Altitude,
+                                }
+                            }]
+                        };
+
+                        console.log(zzpathpoint2006)
+
+                        var popup33 = '<b>Speed(Km/H): </b>' + result.data[i].Speed +
+                            '</br><b>Latitude: <b>' + result.data[i].Latitude +
+                            '</br><b>Longitude: <b>' + result.data[i].Longitude +
+                            '</br><b>Plate Number: <b>' + result.data[i].Plate_No +
+                            '</br><b>Direction:  <b>' + result.data[i].Direction +
+                            '</br><b>GPS Date Time: <b>' + zdate22 +
+                            '</br><b>Altitude: <b>' + result.data[i].Altitude;
+
+                        var iconpathpoint2006 = L.icon({
+                            iconUrl: '/Scripts/truck.png',
+                            iconSize: [15, 15],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var zzpathpointlayer2006 = L.geoJSON(zzpathpoint2006, {
+                            onEachFeature: addMyData2006, pointToLayer: function (point, latlng) {
+                                //if (point.properties.speed < min2006 || min2006 === 0) {
+                                //    min2006 = point.properties.speed;
+                                //}
+                                //if (point.properties.speed > max2006) {
+                                //    max2006 = point.properties.speed;
+                                //}
+                                return L.marker(latlng, { icon: iconpathpoint2006 })
+                            }
+                        }).bindPopup(popup33)
+                            .openPopup()
+                            .addTo(map);
+
+                        pathpointArray.push(zzpathpointlayer2006)
+
+                        //   console.log(zzpathpoint2006)
+                    }
+
+                    // console.log(zzpathpointlayer2006)
+
+                    var sliderspeed2006 = document.getElementById('slider-speed2006');
+
+                    noUiSlider.create(sliderspeed2006, {
+                        start: [minSpeed2006, maxSpeed2006],
+                        tooltips: true,
+                        connect: true,
+                        range: {
+                            'min': minSpeed2006,
+                            'max': maxSpeed2006
+                        }
+                    }).on('slide', function (e) {
+                        console.log(e)
+
+                        //  console.log(pathpointArray)
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                // console.log(zzpathpointlayer)
+                                if (layer.feature.properties.speed >= parseFloat(e[0]) && layer.feature.properties.speed <= parseFloat(e[1])) {
+                                    layer.addTo(map);
+
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                    var slideraltitude2006 = document.getElementById('slider-altitude2006');
+
+                    //var minaltitude2006 = 1;
+                    //var maxaltitude2006 = 100;
+
+                    noUiSlider.create(slideraltitude2006, {
+                        start: [minAltitude2006, maxAltitude2006],
+                        tooltips: true,
+                        connect: true,
+                        range: {
+                            'min': minAltitude2006,
+                            'max': maxAltitude2006
+                        }
+                    }).on('slide', function (e) {
+                        console.log(e)
+
+                        //  console.log(pathpointArray)
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                // console.log(zzpathpointlayer)
+                                if (layer.feature.properties.altitude >= parseFloat(e[0]) && layer.feature.properties.altitude <= parseFloat(e[1])) {
+                                    layer.addTo(map);
+
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                    var date = new Date(formatzdate22);
+                    //  var formattedDate = date.toLocaleDateString() + " " + date.toLocaleTimeString();
+
+                    var sliderdate2006 = document.getElementById('slider-date2006');
+
+                    function timestamp(str) {
+                        return new Date(str).getTime();
+                    }
+
+                    noUiSlider.create(sliderdate2006, {
+                        // range dari timestamp slider
+                        start: [minDate2006.valueOf(), maxDate2006.valueOf()],
+                        range: {
+                            'min': minDate2006.valueOf(),
+                            'max': maxDate2006.valueOf()
+                        },
+
+                        // urutan slider geser2annya
+                        step: 60 * 60 * 1000,
+
+                        //// posisi awal dari geseran slider
+                        tooltips: [
+                            {
+                                to: function (value) {
+                                    return new Date(value).toLocaleString();
+                                },
+                                from: function (value) {
+                                    return value;
+                                }
+                            },
+                            {
+                                to: function (value) {
+                                    return new Date(value).toLocaleString();
+                                },
+                                from: function (value) {
+                                    return value;
+                                }
+                            },
+                        ],
+                        connect: true,
+                        format: wNumb({
+                            decimals: 0
+                        })
+                    })
+                    sliderdate2006.noUiSlider.on('slide', function (e) {
+
+                        console.log(e[1])
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                if (layer.feature.properties.time >= (e[0]) && layer.feature.properties.time <= (e[1])) {
+                                    if (!layer._map) {
+                                        layer.addTo(map);
+                                    }
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                    var sliderdirection2006 = document.getElementById('slider-direction2006');
+
+                    noUiSlider.create(sliderdirection2006, {
+                        start: [minDirection2006, maxDirection2006],
+                        tooltips: true,
+                        connect: true,
+                        range: {
+                            'min': minDirection2006,
+                            'max': maxDirection2006
+                        }
+                    }).on('slide', function (e) {
+                        console.log(e)
+
+                        //  console.log(pathpointArray)
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                // console.log(zzpathpointlayer)
+                                if (layer.feature.properties.direction >= parseFloat(e[0]) && layer.feature.properties.direction <= parseFloat(e[1])) {
+                                    layer.addTo(map);
+
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                }
+            });
+
+            /////////////////////////////////////////////////////////////// PM2006
+
+            //------------------------------------------------------------------------------------------------
+
+            /////////////////////////////////////////////////////////////// PM1026
+
+            $.ajax({
+                type: "GET",
+                url: "/Home/getdataPM1026",
+                datatype: "json",
+                success: function (result) {
+
+                    var pathpointArray = []
+                    var minDate1026, maxDate1026;
+                    var minSpeed1026, maxSpeed1026;
+                    var minAltitude1026, maxAltitude1026;
+                    var minDirection1026, maxDirection1026;
+
+                    for (var i = 0; i < result.data.length; i++) {
+
+
+                        var wok = result.data[i].Altitude
+
+                        // console.log(wok)
+
+                        const convertDateNow = (milis) => {
+
+                            const param = new Date(milis)
+                            const year = param.getFullYear();
+
+                            const month = param.getMonth() + 1;
+                            const date = param.getDate();
+
+                            const h = param.getHours();
+                            const m = param.getMinutes();
+
+                            const s = param.getSeconds();
+                            return `${year}-${month.toString().length == 1 ? `0${month}` : month}-${date.toString().length == 1 ? `0${date}` : date
+                                } ${h.toString().length == 1 ? `0${h}` : h}:${m.toString().length == 1 ? `0${m}` : m
+                                }:${s.toString().length == 1 ? `0${s}` : s}`;
+                        };
+
+                        var zasd22 = moment.utc(result.data[i].GPSDateTime);
+
+                        var zdate22 = convertDateNow(zasd22);
+
+                        var date2222 = new Date(zdate22);
+
+                        console.log(date2222.valueOf())
+
+                        if (!minDate1026 || date2222 < minDate1026) {
+                            minDate1026 = date2222
+                        }
+
+                        if (!maxDate1026 || date2222 > maxDate1026) {
+                            maxDate1026 = date2222
+                        }
+
+                        var speed1026 = result.data[i].Speed;
+
+                        console.log(speed1026.valueOf)
+
+                        if (!minSpeed1026 || speed1026 < minSpeed1026) {
+                            minSpeed1026 = speed1026
+                        }
+
+                        if (!maxSpeed1026 || speed1026 > maxSpeed1026) {
+                            maxSpeed1026 = speed1026
+                        }
+
+                        var altitude1026 = result.data[i].Altitude
+
+                        if (!minAltitude1026 || altitude1026 < minAltitude1026) {
+                            minAltitude1026 = altitude1026
+                        }
+
+                        if (!maxAltitude1026 || altitude1026 > maxAltitude1026) {
+                            maxAltitude1026 = altitude1026
+                        }
+
+                        var direction1026 = result.data[i].Direction
+
+                        if (!minDirection1026 || direction1026 < minDirection1026) {
+                            minDirection1026 = direction1026
+                        }
+
+                        if (!maxDirection1026 || direction1026 > maxDirection1026) {
+                            maxDirection1026 = direction1026
+                        }
+
+
+                        var formatzdate22 = date2222.toISOString();
+
+                        //  console.log(zdate22)
+
+                        //  console.log(formatzdate22)
+
+                        var zzpathpoint1026 = {
+                            "type": "FeatureCollection",
+                            "features": [{
+                                "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [result.data[i].Longitude, result.data[i].Latitude]
+                                },
+                                "type": "Feature",
+                                "properties": {
+                                    "speed": result.data[i].Speed,
+                                    "location": result.data[i].Location,
+                                    "time": (new Date(formatzdate22)).valueOf(),
+                                    "direction": result.data[i].Direction,
+                                    "altitude": result.data[i].Altitude,
+                                }
+                            }]
+                        };
+
+                        console.log(zzpathpoint1026)
+
+                        var popup33 = '<b>Speed(Km/H): </b>' + result.data[i].Speed +
+                            '</br><b>Latitude: <b>' + result.data[i].Latitude +
+                            '</br><b>Longitude: <b>' + result.data[i].Longitude +
+                            '</br><b>Plate Number: <b>' + result.data[i].Plate_No +
+                            '</br><b>Direction:  <b>' + result.data[i].Direction +
+                            '</br><b>GPS Date Time: <b>' + zdate22 +
+                            '</br><b>Altitude: <b>' + result.data[i].Altitude;
+
+                        var iconpathpoint1026 = L.icon({
+                            iconUrl: '/Scripts/truck.png',
+                            iconSize: [15, 15],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var zzpathpointlayer1026 = L.geoJSON(zzpathpoint1026, {
+                            onEachFeature: addMyData1026, pointToLayer: function (point, latlng) {
+                                //if (point.properties.speed < min1026 || min1026 === 0) {
+                                //    min1026 = point.properties.speed;
+                                //}
+                                //if (point.properties.speed > max1026) {
+                                //    max1026 = point.properties.speed;
+                                //}
+                                return L.marker(latlng, { icon: iconpathpoint1026 })
+                            }
+                        }).bindPopup(popup33)
+                            .openPopup()
+                            .addTo(map);
+
+                        pathpointArray.push(zzpathpointlayer1026)
+
+                        //   console.log(zzpathpoint1026)
+                    }
+
+                    // console.log(zzpathpointlayer1026)
+
+                    var sliderspeed1026 = document.getElementById('slider-speed1026');
+
+                    noUiSlider.create(sliderspeed1026, {
+                        start: [minSpeed1026, maxSpeed1026],
+                        tooltips: true,
+                        connect: true,
+                        range: {
+                            'min': minSpeed1026,
+                            'max': maxSpeed1026
+                        }
+                    }).on('slide', function (e) {
+                        console.log(e)
+
+                        //  console.log(pathpointArray)
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                // console.log(zzpathpointlayer)
+                                if (layer.feature.properties.speed >= parseFloat(e[0]) && layer.feature.properties.speed <= parseFloat(e[1])) {
+                                    layer.addTo(map);
+
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                    var slideraltitude1026 = document.getElementById('slider-altitude1026');
+
+                    //var minaltitude1026 = 1;
+                    //var maxaltitude1026 = 100;
+
+                    noUiSlider.create(slideraltitude1026, {
+                        start: [minAltitude1026, maxAltitude1026],
+                        tooltips: true,
+                        connect: true,
+                        range: {
+                            'min': minAltitude1026,
+                            'max': maxAltitude1026
+                        }
+                    }).on('slide', function (e) {
+                        console.log(e)
+
+                        //  console.log(pathpointArray)
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                // console.log(zzpathpointlayer)
+                                if (layer.feature.properties.altitude >= parseFloat(e[0]) && layer.feature.properties.altitude <= parseFloat(e[1])) {
+                                    layer.addTo(map);
+
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                    var date = new Date(formatzdate22);
+                    //  var formattedDate = date.toLocaleDateString() + " " + date.toLocaleTimeString();
+
+                    var sliderdate1026 = document.getElementById('slider-date1026');
+
+                    function timestamp(str) {
+                        return new Date(str).getTime();
+                    }
+
+                    noUiSlider.create(sliderdate1026, {
+                        // range dari timestamp slider
+                        start: [minDate1026.valueOf(), maxDate1026.valueOf()],
+                        range: {
+                            'min': minDate1026.valueOf(),
+                            'max': maxDate1026.valueOf()
+                        },
+
+                        // urutan slider geser2annya
+                        step: 60 * 60 * 1000,
+
+                        //// posisi awal dari geseran slider
+                        tooltips: [
+                            {
+                                to: function (value) {
+                                    return new Date(value).toLocaleString();
+                                },
+                                from: function (value) {
+                                    return value;
+                                }
+                            },
+                            {
+                                to: function (value) {
+                                    return new Date(value).toLocaleString();
+                                },
+                                from: function (value) {
+                                    return value;
+                                }
+                            },
+                        ],
+                        connect: true,
+                        format: wNumb({
+                            decimals: 0
+                        })
+                    })
+                    sliderdate1026.noUiSlider.on('slide', function (e) {
+
+                        console.log(e[1])
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                if (layer.feature.properties.time >= (e[0]) && layer.feature.properties.time <= (e[1])) {
+                                    if (!layer._map) {
+                                        layer.addTo(map);
+                                    }
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                    var sliderdirection1026 = document.getElementById('slider-direction1026');
+
+                    noUiSlider.create(sliderdirection1026, {
+                        start: [minDirection1026, maxDirection1026],
+                        tooltips: true,
+                        connect: true,
+                        range: {
+                            'min': minDirection1026,
+                            'max': maxDirection1026
+                        }
+                    }).on('slide', function (e) {
+                        console.log(e)
+
+                        //  console.log(pathpointArray)
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                // console.log(zzpathpointlayer)
+                                if (layer.feature.properties.direction >= parseFloat(e[0]) && layer.feature.properties.direction <= parseFloat(e[1])) {
+                                    layer.addTo(map);
+
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                }
+            });
+
+            /////////////////////////////////////////////////////////////// PM1026
+
+            //------------------------------------------------------------------------------------------------
+
+            /////////////////////////////////////////////////////////////// PEN49
+
+            $.ajax({
+                type: "GET",
+                url: "/Home/getdataPEN49",
+                datatype: "json",
+                success: function (result) {
+
+                    var pathpointArray = []
+                    var minDatePEN49, maxDatePEN49;
+                    var minSpeedPEN49, maxSpeedPEN49;
+                    var minAltitudePEN49, maxAltitudePEN49;
+                    var minDirectionPEN49, maxDirectionPEN49;
+
+                    for (var i = 0; i < result.data.length; i++) {
+
+
+                        var wok = result.data[i].Altitude
+
+                        // console.log(wok)
+
+                        const convertDateNow = (milis) => {
+
+                            const param = new Date(milis)
+                            const year = param.getFullYear();
+
+                            const month = param.getMonth() + 1;
+                            const date = param.getDate();
+
+                            const h = param.getHours();
+                            const m = param.getMinutes();
+
+                            const s = param.getSeconds();
+                            return `${year}-${month.toString().length == 1 ? `0${month}` : month}-${date.toString().length == 1 ? `0${date}` : date
+                                } ${h.toString().length == 1 ? `0${h}` : h}:${m.toString().length == 1 ? `0${m}` : m
+                                }:${s.toString().length == 1 ? `0${s}` : s}`;
+                        };
+
+                        var zasd22 = moment.utc(result.data[i].GPSDateTime);
+
+                        var zdate22 = convertDateNow(zasd22);
+
+                        var date2222 = new Date(zdate22);
+
+                        console.log(date2222.valueOf())
+
+                        if (!minDatePEN49 || date2222 < minDatePEN49) {
+                            minDatePEN49 = date2222
+                        }
+
+                        if (!maxDatePEN49 || date2222 > maxDatePEN49) {
+                            maxDatePEN49 = date2222
+                        }
+
+                        var speedPEN49 = result.data[i].Speed;
+
+                        console.log(speedPEN49.valueOf)
+
+                        if (!minSpeedPEN49 || speedPEN49 < minSpeedPEN49) {
+                            minSpeedPEN49 = speedPEN49
+                        }
+
+                        if (!maxSpeedPEN49 || speedPEN49 > maxSpeedPEN49) {
+                            maxSpeedPEN49 = speedPEN49
+                        }
+
+                        var altitudePEN49 = result.data[i].Altitude
+
+                        if (!minAltitudePEN49 || altitudePEN49 < minAltitudePEN49) {
+                            minAltitudePEN49 = altitudePEN49
+                        }
+
+                        if (!maxAltitudePEN49 || altitudePEN49 > maxAltitudePEN49) {
+                            maxAltitudePEN49 = altitudePEN49
+                        }
+
+                        var directionPEN49 = result.data[i].Direction
+
+                        if (!minDirectionPEN49 || directionPEN49 < minDirectionPEN49) {
+                            minDirectionPEN49 = directionPEN49
+                        }
+
+                        if (!maxDirectionPEN49 || directionPEN49 > maxDirectionPEN49) {
+                            maxDirectionPEN49 = directionPEN49
+                        }
+
+
+                        var formatzdate22 = date2222.toISOString();
+
+                        //  console.log(zdate22)
+
+                        //  console.log(formatzdate22)
+
+                        var zzpathpointPEN49 = {
+                            "type": "FeatureCollection",
+                            "features": [{
+                                "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [result.data[i].Longitude, result.data[i].Latitude]
+                                },
+                                "type": "Feature",
+                                "properties": {
+                                    "speed": result.data[i].Speed,
+                                    "location": result.data[i].Location,
+                                    "time": (new Date(formatzdate22)).valueOf(),
+                                    "direction": result.data[i].Direction,
+                                    "altitude": result.data[i].Altitude,
+                                }
+                            }]
+                        };
+
+                        console.log(zzpathpointPEN49)
+
+                        var popup33 = '<b>Speed(Km/H): </b>' + result.data[i].Speed +
+                            '</br><b>Latitude: <b>' + result.data[i].Latitude +
+                            '</br><b>Longitude: <b>' + result.data[i].Longitude +
+                            '</br><b>Plate Number: <b>' + result.data[i].Plate_No +
+                            '</br><b>Direction:  <b>' + result.data[i].Direction +
+                            '</br><b>GPS Date Time: <b>' + zdate22 +
+                            '</br><b>Altitude: <b>' + result.data[i].Altitude;
+
+                        var iconpathpointPEN49 = L.icon({
+                            iconUrl: '/Scripts/truck.png',
+                            iconSize: [15, 15],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var zzpathpointlayerPEN49 = L.geoJSON(zzpathpointPEN49, {
+                            onEachFeature: addMyDataPEN49, pointToLayer: function (point, latlng) {
+                                //if (point.properties.speed < minPEN49 || minPEN49 === 0) {
+                                //    minPEN49 = point.properties.speed;
+                                //}
+                                //if (point.properties.speed > maxPEN49) {
+                                //    maxPEN49 = point.properties.speed;
+                                //}
+                                return L.marker(latlng, { icon: iconpathpointPEN49 })
+                            }
+                        }).bindPopup(popup33)
+                            .openPopup()
+                            .addTo(map);
+
+                        pathpointArray.push(zzpathpointlayerPEN49)
+
+                        //   console.log(zzpathpointPEN49)
+                    }
+
+                    // console.log(zzpathpointlayerPEN49)
+
+                    var sliderspeedPEN49 = document.getElementById('slider-speedPEN49');
+
+                    noUiSlider.create(sliderspeedPEN49, {
+                        start: [minSpeedPEN49, maxSpeedPEN49],
+                        tooltips: true,
+                        connect: true,
+                        range: {
+                            'min': minSpeedPEN49,
+                            'max': maxSpeedPEN49
+                        }
+                    }).on('slide', function (e) {
+                        console.log(e)
+
+                        //  console.log(pathpointArray)
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                // console.log(zzpathpointlayer)
+                                if (layer.feature.properties.speed >= parseFloat(e[0]) && layer.feature.properties.speed <= parseFloat(e[1])) {
+                                    layer.addTo(map);
+
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                    var slideraltitudePEN49 = document.getElementById('slider-altitudePEN49');
+
+                    //var minaltitudePEN49 = 1;
+                    //var maxaltitudePEN49 = 100;
+
+                    noUiSlider.create(slideraltitudePEN49, {
+                        start: [minAltitudePEN49, maxAltitudePEN49],
+                        tooltips: true,
+                        connect: true,
+                        range: {
+                            'min': minAltitudePEN49,
+                            'max': maxAltitudePEN49
+                        }
+                    }).on('slide', function (e) {
+                        console.log(e)
+
+                        //  console.log(pathpointArray)
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                // console.log(zzpathpointlayer)
+                                if (layer.feature.properties.altitude >= parseFloat(e[0]) && layer.feature.properties.altitude <= parseFloat(e[1])) {
+                                    layer.addTo(map);
+
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                    var date = new Date(formatzdate22);
+                    //  var formattedDate = date.toLocaleDateString() + " " + date.toLocaleTimeString();
+
+                    var sliderdatePEN49 = document.getElementById('slider-datePEN49');
+
+                    function timestamp(str) {
+                        return new Date(str).getTime();
+                    }
+
+                    noUiSlider.create(sliderdatePEN49, {
+                        // range dari timestamp slider
+                        start: [minDatePEN49.valueOf(), maxDatePEN49.valueOf()],
+                        range: {
+                            'min': minDatePEN49.valueOf(),
+                            'max': maxDatePEN49.valueOf()
+                        },
+
+                        // urutan slider geser2annya
+                        step: 60 * 60 * 1000,
+
+                        //// posisi awal dari geseran slider
+                        tooltips: [
+                            {
+                                to: function (value) {
+                                    return new Date(value).toLocaleString();
+                                },
+                                from: function (value) {
+                                    return value;
+                                }
+                            },
+                            {
+                                to: function (value) {
+                                    return new Date(value).toLocaleString();
+                                },
+                                from: function (value) {
+                                    return value;
+                                }
+                            },
+                        ],
+                        connect: true,
+                        format: wNumb({
+                            decimals: 0
+                        })
+                    })
+                    sliderdatePEN49.noUiSlider.on('slide', function (e) {
+
+                        console.log(e[1])
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                if (layer.feature.properties.time >= (e[0]) && layer.feature.properties.time <= (e[1])) {
+                                    if (!layer._map) {
+                                        layer.addTo(map);
+                                    }
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                    var sliderdirectionPEN49 = document.getElementById('slider-directionPEN49');
+
+                    noUiSlider.create(sliderdirectionPEN49, {
+                        start: [minDirectionPEN49, maxDirectionPEN49],
+                        tooltips: true,
+                        connect: true,
+                        range: {
+                            'min': minDirectionPEN49,
+                            'max': maxDirectionPEN49
+                        }
+                    }).on('slide', function (e) {
+                        console.log(e)
+
+                        //  console.log(pathpointArray)
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                // console.log(zzpathpointlayer)
+                                if (layer.feature.properties.direction >= parseFloat(e[0]) && layer.feature.properties.direction <= parseFloat(e[1])) {
+                                    layer.addTo(map);
+
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                }
+            });
+
+            //////////////////////////////////////////////////////////////// PEN49
+
+            //------------------------------------------------------------------------------------------------
+
+            /////////////////////////////////////////////////////////////// PEN45
+
+            $.ajax({
+                type: "GET",
+                url: "/Home/getdataPEN45",
+                datatype: "json",
+                success: function (result) {
+
+                    var pathpointArray = []
+                    var minDatePEN45, maxDatePEN45;
+                    var minSpeedPEN45, maxSpeedPEN45;
+                    var minAltitudePEN45, maxAltitudePEN45;
+                    var minDirectionPEN45, maxDirectionPEN45;
+
+                    for (var i = 0; i < result.data.length; i++) {
+
+
+                        var wok = result.data[i].Altitude
+
+                        // console.log(wok)
+
+                        const convertDateNow = (milis) => {
+
+                            const param = new Date(milis)
+                            const year = param.getFullYear();
+
+                            const month = param.getMonth() + 1;
+                            const date = param.getDate();
+
+                            const h = param.getHours();
+                            const m = param.getMinutes();
+
+                            const s = param.getSeconds();
+                            return `${year}-${month.toString().length == 1 ? `0${month}` : month}-${date.toString().length == 1 ? `0${date}` : date
+                                } ${h.toString().length == 1 ? `0${h}` : h}:${m.toString().length == 1 ? `0${m}` : m
+                                }:${s.toString().length == 1 ? `0${s}` : s}`;
+                        };
+
+                        var zasd22 = moment.utc(result.data[i].GPSDateTime);
+
+                        var zdate22 = convertDateNow(zasd22);
+
+                        var date2222 = new Date(zdate22);
+
+                        console.log(date2222.valueOf())
+
+                        if (!minDatePEN45 || date2222 < minDatePEN45) {
+                            minDatePEN45 = date2222
+                        }
+
+                        if (!maxDatePEN45 || date2222 > maxDatePEN45) {
+                            maxDatePEN45 = date2222
+                        }
+
+                        var speedPEN45 = result.data[i].Speed;
+
+                        console.log(speedPEN45.valueOf)
+
+                        if (!minSpeedPEN45 || speedPEN45 < minSpeedPEN45) {
+                            minSpeedPEN45 = speedPEN45
+                        }
+
+                        if (!maxSpeedPEN45 || speedPEN45 > maxSpeedPEN45) {
+                            maxSpeedPEN45 = speedPEN45
+                        }
+
+                        var altitudePEN45 = result.data[i].Altitude
+
+                        if (!minAltitudePEN45 || altitudePEN45 < minAltitudePEN45) {
+                            minAltitudePEN45 = altitudePEN45
+                        }
+
+                        if (!maxAltitudePEN45 || altitudePEN45 > maxAltitudePEN45) {
+                            maxAltitudePEN45 = altitudePEN45
+                        }
+
+                        var directionPEN45 = result.data[i].Direction
+
+                        if (!minDirectionPEN45 || directionPEN45 < minDirectionPEN45) {
+                            minDirectionPEN45 = directionPEN45
+                        }
+
+                        if (!maxDirectionPEN45 || directionPEN45 > maxDirectionPEN45) {
+                            maxDirectionPEN45 = directionPEN45
+                        }
+
+
+                        var formatzdate22 = date2222.toISOString();
+
+                        //  console.log(zdate22)
+
+                        //  console.log(formatzdate22)
+
+                        var zzpathpointPEN45 = {
+                            "type": "FeatureCollection",
+                            "features": [{
+                                "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [result.data[i].Longitude, result.data[i].Latitude]
+                                },
+                                "type": "Feature",
+                                "properties": {
+                                    "speed": result.data[i].Speed,
+                                    "location": result.data[i].Location,
+                                    "time": (new Date(formatzdate22)).valueOf(),
+                                    "direction": result.data[i].Direction,
+                                    "altitude": result.data[i].Altitude,
+                                }
+                            }]
+                        };
+
+                        console.log(zzpathpointPEN45)
+
+                        var popup33 = '<b>Speed(Km/H): </b>' + result.data[i].Speed +
+                            '</br><b>Latitude: <b>' + result.data[i].Latitude +
+                            '</br><b>Longitude: <b>' + result.data[i].Longitude +
+                            '</br><b>Plate Number: <b>' + result.data[i].Plate_No +
+                            '</br><b>Direction:  <b>' + result.data[i].Direction +
+                            '</br><b>GPS Date Time: <b>' + zdate22 +
+                            '</br><b>Altitude: <b>' + result.data[i].Altitude;
+
+                        var iconpathpointPEN45 = L.icon({
+                            iconUrl: '/Scripts/truck.png',
+                            iconSize: [15, 15],
+                            shadowSize: [10, 10],
+                            iconAnchor: [10, 10],
+                            shadowAnchor: [10, 10],
+                            popupAnchor: [-3, -16]
+                        });
+
+                        var zzpathpointlayerPEN45 = L.geoJSON(zzpathpointPEN45, {
+                            onEachFeature: addMyDataPEN45, pointToLayer: function (point, latlng) {
+                                //if (point.properties.speed < minPEN45 || minPEN45 === 0) {
+                                //    minPEN45 = point.properties.speed;
+                                //}
+                                //if (point.properties.speed > maxPEN45) {
+                                //    maxPEN45 = point.properties.speed;
+                                //}
+                                return L.marker(latlng, { icon: iconpathpointPEN45 })
+                            }
+                        }).bindPopup(popup33)
+                            .openPopup()
+                            .addTo(map);
+
+                        pathpointArray.push(zzpathpointlayerPEN45)
+
+                        //   console.log(zzpathpointPEN45)
+                    }
+
+                    // console.log(zzpathpointlayerPEN45)
+
+                    var sliderspeedPEN45 = document.getElementById('slider-speedPEN45');
+
+                    noUiSlider.create(sliderspeedPEN45, {
+                        start: [minSpeedPEN45, maxSpeedPEN45],
+                        tooltips: true,
+                        connect: true,
+                        range: {
+                            'min': minSpeedPEN45,
+                            'max': maxSpeedPEN45
+                        }
+                    }).on('slide', function (e) {
+                        console.log(e)
+
+                        //  console.log(pathpointArray)
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                // console.log(zzpathpointlayer)
+                                if (layer.feature.properties.speed >= parseFloat(e[0]) && layer.feature.properties.speed <= parseFloat(e[1])) {
+                                    layer.addTo(map);
+
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                    var slideraltitudePEN45 = document.getElementById('slider-altitudePEN45');
+
+                    //var minaltitudePEN45 = 1;
+                    //var maxaltitudePEN45 = 100;
+
+                    noUiSlider.create(slideraltitudePEN45, {
+                        start: [minAltitudePEN45, maxAltitudePEN45],
+                        tooltips: true,
+                        connect: true,
+                        range: {
+                            'min': minAltitudePEN45,
+                            'max': maxAltitudePEN45
+                        }
+                    }).on('slide', function (e) {
+                        console.log(e)
+
+                        //  console.log(pathpointArray)
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                // console.log(zzpathpointlayer)
+                                if (layer.feature.properties.altitude >= parseFloat(e[0]) && layer.feature.properties.altitude <= parseFloat(e[1])) {
+                                    layer.addTo(map);
+
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                    var date = new Date(formatzdate22);
+                    //  var formattedDate = date.toLocaleDateString() + " " + date.toLocaleTimeString();
+
+                    var sliderdatePEN45 = document.getElementById('slider-datePEN45');
+
+                    function timestamp(str) {
+                        return new Date(str).getTime();
+                    }
+
+                    noUiSlider.create(sliderdatePEN45, {
+                        // range dari timestamp slider
+                        start: [minDatePEN45.valueOf(), maxDatePEN45.valueOf()],
+                        range: {
+                            'min': minDatePEN45.valueOf(),
+                            'max': maxDatePEN45.valueOf()
+                        },
+
+                        // urutan slider geser2annya
+                        step: 60 * 60 * 1000,
+
+                        //// posisi awal dari geseran slider
+                        tooltips: [
+                            {
+                                to: function (value) {
+                                    return new Date(value).toLocaleString();
+                                },
+                                from: function (value) {
+                                    return value;
+                                }
+                            },
+                            {
+                                to: function (value) {
+                                    return new Date(value).toLocaleString();
+                                },
+                                from: function (value) {
+                                    return value;
+                                }
+                            },
+                        ],
+                        connect: true,
+                        format: wNumb({
+                            decimals: 0
+                        })
+                    })
+                    sliderdatePEN45.noUiSlider.on('slide', function (e) {
+
+                        console.log(e[1])
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                if (layer.feature.properties.time >= (e[0]) && layer.feature.properties.time <= (e[1])) {
+                                    if (!layer._map) {
+                                        layer.addTo(map);
+                                    }
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                    var sliderdirectionPEN45 = document.getElementById('slider-directionPEN45');
+
+                    noUiSlider.create(sliderdirectionPEN45, {
+                        start: [minDirectionPEN45, maxDirectionPEN45],
+                        tooltips: true,
+                        connect: true,
+                        range: {
+                            'min': minDirectionPEN45,
+                            'max': maxDirectionPEN45
+                        }
+                    }).on('slide', function (e) {
+                        console.log(e)
+
+                        //  console.log(pathpointArray)
+
+                        for (zzpathpointlayer of pathpointArray) {
+
+                            zzpathpointlayer.eachLayer(function (layer) {
+
+                                // console.log(zzpathpointlayer)
+                                if (layer.feature.properties.direction >= parseFloat(e[0]) && layer.feature.properties.direction <= parseFloat(e[1])) {
+                                    layer.addTo(map);
+
+                                } else {
+                                    map.removeLayer(layer);
+                                }
+                            });
+                        }
+                    });
+
+                }
+            });
+
+            /////////////////////////////////////////////////////////////// PEN45
+
+            //------------------------------------------------------------------------------------------------
+
+
+        })
+
+    </script>
+</body>
+</html>
+
